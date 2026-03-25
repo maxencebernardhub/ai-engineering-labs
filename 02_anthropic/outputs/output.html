@@ -1,0 +1,191 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Prompt Evaluation Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            .header {
+                background-color: #f0f0f0;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .summary-stats {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .stat-box {
+                background-color: #fff;
+                border-radius: 5px;
+                padding: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                flex-basis: 30%;
+                min-width: 200px;
+            }
+            .stat-value {
+                font-size: 24px;
+                font-weight: bold;
+                margin-top: 5px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th {
+                background-color: #4a4a4a;
+                color: white;
+                text-align: left;
+                padding: 12px;
+            }
+            td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                vertical-align: top;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .output-cell {
+                white-space: pre-wrap;
+            }
+            .score {
+                font-weight: bold;
+                padding: 5px 10px;
+                border-radius: 3px;
+                display: inline-block;
+            }
+            .score-high {
+                background-color: #c8e6c9;
+                color: #2e7d32;
+            }
+            .score-medium {
+                background-color: #fff9c4;
+                color: #f57f17;
+            }
+            .score-low {
+                background-color: #ffcdd2;
+                color: #c62828;
+            }
+            .output {
+                overflow: auto;
+                white-space: pre-wrap;
+            }
+
+            .output pre {
+                background-color: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 10px;
+                margin: 0;
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.4;
+                color: #333;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+                overflow-x: auto;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+
+            td {
+                width: 20%;
+            }
+            .score-col {
+                width: 80px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Prompt Evaluation Report</h1>
+            <div class="summary-stats">
+                <div class="stat-box">
+                    <div>Total Test Cases</div>
+                    <div class="stat-value">1</div>
+                </div>
+                <div class="stat-box">
+                    <div>Average Score</div>
+                    <div class="stat-value">6.0 / 10</div>
+                </div>
+                <div class="stat-box">
+                    <div>Pass Rate (≥7)</div>
+                    <div class="stat-value">0.0%</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Prompt Inputs</th>
+                    <th>Solution Criteria</th>
+                    <th>Output</th>
+                    <th>Score</th>
+                    <th>Reasoning</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+            <tr>
+                <td>Testing with a high-endurance athlete (marathon runner) requiring 3000+ calories with specific macro ratios (60% carbs, 20% protein, 20% fat) and timing around training sessions</td>
+                <td class="prompt-inputs"><strong>height:</strong> 180 cm<br><strong>weight:</strong> 70 kg<br><strong>goal:</strong> Marathon training - high-endurance athlete requiring 3000+ calories with 60% carbs, 20% protein, 20% fat macro ratios, with meals timed around training sessions<br><strong>restrictions:</strong> None</td>
+                <td class="criteria">• Total daily calories meet or exceed 3000 with macro breakdown of approximately 60% carbs, 20% protein, 20% fat<br>• Meal plan is compact and presented as a single day schedule with clear meal timing<br>• Includes pre-training and post-training nutrition strategically timed around endurance workouts</td>
+                <td class="output"><pre># One-Day Meal Plan for Marathon Training Athlete
+
+Here is a one-day meal plan for a high-endurance marathon athlete requiring optimal fueling around training sessions:
+
+* **Calorie Target:** Approximately 3000 calories
+* **Macronutrient Breakdown:** Protein (150g / 20%), Fat (67g / 20%), Carbs (450g / 60%)
+
+## Meal Plan:
+
+* **Breakfast (7:00 AM) - Pre-Training Fuel:**
+Oatmeal (100g dry weight) with honey (30g), banana (120g), and whole milk (240ml). Scrambled eggs (2 large eggs, 100g).
+  * Protein: 18g, Fat: 12g, Carbs: 85g
+
+* **Mid-Morning Snack (10:00 AM) - During/Post-Training:**
+Sports drink or banana smoothie with whey protein powder (30g), oat milk (250ml), and dates (40g).
+  * Protein: 25g, Fat: 2g, Carbs: 60g
+
+* **Lunch (1:00 PM) - Recovery Meal:**
+Grilled chicken breast (150g) with brown rice (120g cooked), steamed sweet potato (150g), and olive oil drizzle (10ml). Mixed green salad (100g) with vinaigrette.
+  * Protein: 42g, Fat: 15g, Carbs: 110g
+
+* **Afternoon Snack (3:30 PM) - Energy Boost:**
+Whole wheat bread (60g) with peanut butter (25g) and strawberries (100g). Greek yogurt (150g).
+  * Protein: 20g, Fat: 12g, Carbs: 65g
+
+* **Dinner (7:00 PM) - Evening Recovery:**
+Lean ground turkey (160g) with whole wheat pasta (100g cooked), marinara sauce (150g), and parmesan cheese (20g). Roasted broccoli (200g) with garlic.
+  * Protein: 38g, Fat: 18g, Carbs: 95g
+
+* **Evening Snack (9:30 PM) - Sleep Support:**
+Cottage cheese (200g, low-fat) with almonds (20g) and blueberries (80g).
+  * Protein: 28g, Fat: 8g, Carbs: 35g
+
+---
+
+This meal plan prioritizes **carbohydrate-rich whole grains, fruits, and starchy vegetables** to fuel endurance training, strategically times meals around training sessions, and includes **adequate protein distribution** throughout the day for muscle recovery and adaptation. The combination supports sustained energy, glycogen replenishment, and optimal marathon training adaptations.</pre></td>
+                <td class="score-col">
+                    <span class="score score-medium">6</span></td>
+                <td class="reasoning">The solution meets all three mandatory requirements by including daily caloric information, macronutrient breakdown, and detailed meals with exact portions and timing. However, the actual nutritional values fall short of the specified targets. The calorie total is approximately 2,815 calories (verified by summing individual meal macros: 171g protein × 4 + 115g fat × 9 + 450g carbs × 4 = 684 + 1,035 + 1,800 = 3,519 calories appears inconsistent with meal-by-meal totals, which sum to ~2,815). The macro percentages are approximately 54% carbs, 21% protein, and 25% fat—missing the 60% carb target and exceeding the 20% fat target. Despite these quantitative shortfalls, the solution demonstrates strong understanding of athlete nutrition principles, appropriate meal timing around training, and excellent presentation. The deficiencies are material but not catastrophic enough to warrant a failing score since all mandatory structural requirements are present.</td>
+            </tr>
+        
+            </tbody>
+        </table>
+    </body>
+    </html>
+    

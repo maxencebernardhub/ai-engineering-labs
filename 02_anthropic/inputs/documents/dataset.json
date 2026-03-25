@@ -1,0 +1,17 @@
+[
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "70 kg",
+      "goal": "Marathon training - high-endurance athlete requiring 3000+ calories with 60% carbs, 20% protein, 20% fat macro ratios, with meals timed around training sessions",
+      "restrictions": "None"
+    },
+    "solution_criteria": [
+      "Total daily calories meet or exceed 3000 with macro breakdown of approximately 60% carbs, 20% protein, 20% fat",
+      "Meal plan is compact and presented as a single day schedule with clear meal timing",
+      "Includes pre-training and post-training nutrition strategically timed around endurance workouts"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a high-endurance athlete (marathon runner) requiring 3000+ calories with specific macro ratios (60% carbs, 20% protein, 20% fat) and timing around training sessions"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "output": "# One-Day Meal Plan for Marathon Training Athlete\n\nHere is a one-day meal plan for a high-endurance marathon athlete requiring optimal fueling around training sessions:\n\n* **Calorie Target:** Approximately 3000 calories\n* **Macronutrient Breakdown:** Protein (150g / 20%), Fat (67g / 20%), Carbs (450g / 60%)\n\n## Meal Plan:\n\n* **Breakfast (7:00 AM) - Pre-Training Fuel:**\nOatmeal (100g dry weight) with honey (30g), banana (120g), and whole milk (240ml). Scrambled eggs (2 large eggs, 100g).\n  * Protein: 18g, Fat: 12g, Carbs: 85g\n\n* **Mid-Morning Snack (10:00 AM) - During/Post-Training:**\nSports drink or banana smoothie with whey protein powder (30g), oat milk (250ml), and dates (40g).\n  * Protein: 25g, Fat: 2g, Carbs: 60g\n\n* **Lunch (1:00 PM) - Recovery Meal:**\nGrilled chicken breast (150g) with brown rice (120g cooked), steamed sweet potato (150g), and olive oil drizzle (10ml). Mixed green salad (100g) with vinaigrette.\n  * Protein: 42g, Fat: 15g, Carbs: 110g\n\n* **Afternoon Snack (3:30 PM) - Energy Boost:**\nWhole wheat bread (60g) with peanut butter (25g) and strawberries (100g). Greek yogurt (150g).\n  * Protein: 20g, Fat: 12g, Carbs: 65g\n\n* **Dinner (7:00 PM) - Evening Recovery:**\nLean ground turkey (160g) with whole wheat pasta (100g cooked), marinara sauce (150g), and parmesan cheese (20g). Roasted broccoli (200g) with garlic.\n  * Protein: 38g, Fat: 18g, Carbs: 95g\n\n* **Evening Snack (9:30 PM) - Sleep Support:**\nCottage cheese (200g, low-fat) with almonds (20g) and blueberries (80g).\n  * Protein: 28g, Fat: 8g, Carbs: 35g\n\n---\n\nThis meal plan prioritizes **carbohydrate-rich whole grains, fruits, and starchy vegetables** to fuel endurance training, strategically times meals around training sessions, and includes **adequate protein distribution** throughout the day for muscle recovery and adaptation. The combination supports sustained energy, glycogen replenishment, and optimal marathon training adaptations.",
+    "test_case": {
+      "prompt_inputs": {
+        "height": "180 cm",
+        "weight": "70 kg",
+        "goal": "Marathon training - high-endurance athlete requiring 3000+ calories with 60% carbs, 20% protein, 20% fat macro ratios, with meals timed around training sessions",
+        "restrictions": "None"
+      },
+      "solution_criteria": [
+        "Total daily calories meet or exceed 3000 with macro breakdown of approximately 60% carbs, 20% protein, 20% fat",
+        "Meal plan is compact and presented as a single day schedule with clear meal timing",
+        "Includes pre-training and post-training nutrition strategically timed around endurance workouts"
+      ],
+      "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+      "scenario": "Testing with a high-endurance athlete (marathon runner) requiring 3000+ calories with specific macro ratios (60% carbs, 20% protein, 20% fat) and timing around training sessions"
+    },
+    "score": 6,
+    "reasoning": "The solution meets all three mandatory requirements by including daily caloric information, macronutrient breakdown, and detailed meals with exact portions and timing. However, the actual nutritional values fall short of the specified targets. The calorie total is approximately 2,815 calories (verified by summing individual meal macros: 171g protein \u00d7 4 + 115g fat \u00d7 9 + 450g carbs \u00d7 4 = 684 + 1,035 + 1,800 = 3,519 calories appears inconsistent with meal-by-meal totals, which sum to ~2,815). The macro percentages are approximately 54% carbs, 21% protein, and 25% fat\u2014missing the 60% carb target and exceeding the 20% fat target. Despite these quantitative shortfalls, the solution demonstrates strong understanding of athlete nutrition principles, appropriate meal timing around training, and excellent presentation. The deficiencies are material but not catastrophic enough to warrant a failing score since all mandatory structural requirements are present."
+  }
+]

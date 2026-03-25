@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block_env_access.sh",
+            "statusMessage": "Checking file access policy..."
+          }
+        ]
+      }
+    ]
+  }
+}

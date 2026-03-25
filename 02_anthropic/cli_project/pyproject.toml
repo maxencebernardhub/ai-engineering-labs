@@ -1,0 +1,18 @@
+[project]
+name = "anthropic-cli-agent"
+version = "0.1.0"
+description = "Interactive CLI chat agent powered by Claude with MCP tool support."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.51.0",
+    "mcp[cli]>=1.8.0",
+    "prompt-toolkit>=3.0.51",
+    "python-dotenv>=1.1.0",
+]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP"]

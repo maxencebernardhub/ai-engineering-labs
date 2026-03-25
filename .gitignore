@@ -1,0 +1,25 @@
+# Secrets
+.env
+*.env
+
+# Python virtual environments
+.venv/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+
+# Packaging / build artifacts
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor noise
+.DS_Store
+.vscode/
+*.code-workspace
+
