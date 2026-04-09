@@ -17,7 +17,7 @@ to more advanced, production-oriented patterns.
 | ------ | --------------- | ----------------- | ------ | ------ |
 | [`01_openai/`](01_openai/) | OpenAI | Text generation · Structured outputs · Function calling · Tool use · Streaming · Embeddings · Semantic search · Image generation · Audio (TTS + STT) · Video generation · Token cost tracking · Multi-turn conversations · Error handling · Model comparison | Python scripts + Notebooks | ✅ Available |
 | [`02_anthropic/`](02_anthropic/) | Anthropic Claude | Text generation · Prompt engineering · Prompt evaluation (LLM-as-judge) · Tool use · Agentic loops · Web search · Text editor tool · RAG (chunking, embeddings, BM25, hybrid) · Prompt caching · Extended thinking · Citations · Vision · PDF processing · Code execution · MCP CLI project | Notebooks + CLI project | ✅ Available |
-| `03_google_ai/` | Google Gemini | Text generation · Multimodal inputs · Structured outputs · Function calling · Grounding · Long context | Notebooks + Scripts | 🔵 Planned |
+| [`03_google_ai/`](03_google_ai/) | Google Gemini | Text generation · Multimodal (Images, Audio, Video) · Long context (2M tokens) · Structured outputs · Function calling · Code execution · Model-as-a-Judge · Multimodal Live API · Context Caching · Batch API · Controlled generation (Thinking mode, Hinting) | Notebooks + Scripts | ✅ Available |
 | `04_multi_provider/` | Cross-provider | Side-by-side benchmarks · Cost comparison · Latency profiling · Output quality evaluation · Provider abstraction patterns | Notebooks | 🔵 Planned |
 | `05_rag_langchain/` | LangChain | Document loaders · Text splitters · Vector stores · Retrieval chains · Conversational RAG · Evaluation with RAGAS | Notebooks + Scripts | 🔵 Planned |
 | `06_agents_langgraph/` | LangGraph | ReAct agents · Multi-agent workflows · Human-in-the-loop · Stateful graphs · Tool orchestration · Agent memory | Notebooks + Scripts | 🔵 Planned |
@@ -52,6 +52,18 @@ to more advanced, production-oriented patterns.
 | [`02_anthropic/notebooks/05_thinking.ipynb`](02_anthropic/notebooks/05_thinking.ipynb) | Extended thinking mode for complex reasoning tasks |
 | [`02_anthropic/cli_project/README.md`](02_anthropic/cli_project/README.md) | MCP Chat CLI: real-world tool use and document retrieval via MCP |
 
+### `03_google_ai/` — Google Gemini Labs
+
+| Resource | Description |
+| -------- | ----------- |
+| [`03_google_ai/README.md`](03_google_ai/README.md) | Full overview, installation, and learning path |
+| [`03_google_ai/notebooks/00_quickstart_gemini.ipynb`](03_google_ai/notebooks/00_quickstart_gemini.ipynb) | Compact SDK reference: text, structured outputs, streaming, embeddings |
+| [`03_google_ai/scripts/gemini_client.py`](03_google_ai/scripts/gemini_client.py) | Reusable helper module shared across all Google AI notebooks |
+| [`03_google_ai/notebooks/04_multimodality_deep_dive.ipynb`](03_google_ai/notebooks/04_multimodality_deep_dive.ipynb) | Advanced vision, audio, and video reasoning |
+| [`03_google_ai/notebooks/10_multimodal_live_interactions.ipynb`](03_google_ai/notebooks/10_multimodal_live_interactions.ipynb) | Real-time WebSocket audio and tool calling agents |
+| [`03_google_ai/notebooks/11_advanced_optimization.ipynb`](03_google_ai/notebooks/11_advanced_optimization.ipynb) | Context caching, dynamic retrieval, and grounding |
+| [`03_google_ai/notebooks/13_batch_api_processing.ipynb`](03_google_ai/notebooks/13_batch_api_processing.ipynb) | High-throughput offline processing with 50% cost reduction |
+
 ---
 
 ## Getting Started
@@ -79,6 +91,9 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 # Anthropic
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# Google AI (Gemini)
+GEMINI_API_KEY=your_gemini_api_key_here
 
 # VoyageAI (used for embeddings in Anthropic labs)
 VOYAGE_API_KEY=your_voyageai_api_key_here
