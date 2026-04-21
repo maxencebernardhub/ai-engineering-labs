@@ -140,7 +140,7 @@ class AnthropicProvider(BaseProvider):
                 # Extract text from the first content block
                 text_blocks = [b.text for b in raw.content if b.type == "text"]
                 text = "".join(text_blocks)
-                parsed = raw.parsed
+                parsed = raw.parsed_output
                 if parsed is None:
                     raise StructuredOutputParseError(
                         f"Anthropic returned parsed=None for schema {schema}"
@@ -204,14 +204,9 @@ class AnthropicProvider(BaseProvider):
                 messages=[{"role": "user", "content": prompt}],
             )
             if schema is not None:
-                # Use output_config (low-level API) so messages.stream() applies
-                # constrained decoding server-side during streaming.
-                kwargs["output_config"] = {
-                    "format": {
-                        "type": "json_schema",
-                        "schema": schema.model_json_schema(),
-                    }
-                }
+                # Pass output_format directly so messages.stream() populates
+                # parsed_output on each ParsedTextBlock after the stream ends.
+                kwargs["output_format"] = schema
 
             try:
                 async with self._client.messages.stream(**kwargs) as stream:

@@ -35,8 +35,16 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / ".env")
 # ---------------------------------------------------------------------------
 _PRICING: dict[str, dict[str, float]] = {
     "gemini-3.1-pro": {"input": 1.25, "output": 5.00},
+    "gemini-3.1-pro-preview": {"input": 1.25, "output": 5.00},
 }
 _DEFAULT_PRICING = {"input": 1.25, "output": 5.00}
+
+# Map of friendly/canonical model names to the actual API model identifiers.
+# This allows tests and callers to use stable names without knowing the exact
+# preview suffix required by the Gemini API at a given point in time.
+_MODEL_ALIASES: dict[str, str] = {
+    "gemini-3.1-pro": "gemini-3.1-pro-preview",
+}
 
 
 def _cost(model: str, input_tokens: int, output_tokens: int) -> float:
@@ -108,12 +116,14 @@ class GeminiProvider(BaseProvider):
             RateLimitError: On HTTP 429 responses.
             ProviderTimeoutError: On request timeout.
         """
+        # Resolve any friendly alias to the actual API model identifier.
+        resolved_model = _MODEL_ALIASES.get(model, model)
         if stream:
             return await self._generate_streaming(
-                prompt, model, temperature, max_tokens, schema
+                prompt, resolved_model, temperature, max_tokens, schema
             )
         return await self._generate_blocking(
-            prompt, model, temperature, max_tokens, schema
+            prompt, resolved_model, temperature, max_tokens, schema
         )
 
     # ------------------------------------------------------------------
