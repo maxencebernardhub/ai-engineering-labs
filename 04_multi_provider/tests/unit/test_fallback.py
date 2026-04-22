@@ -162,6 +162,7 @@ class TestStreamingFallback:
             provider=provider,
             schema=None,
             cost_tracker_callback=lambda r: None,
+            start_time=0.0,
         )
 
     async def test_streaming_fallback_on_rate_limit(self):

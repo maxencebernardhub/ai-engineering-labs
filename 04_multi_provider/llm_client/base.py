@@ -44,7 +44,7 @@ class StreamingResponse:
         provider: str,
         schema: type[BaseModel] | None,
         cost_tracker_callback,
-        start_time: float | None = None,
+        start_time: float,
         meta: dict | None = None,
     ) -> None:
         """Initialise the streaming response wrapper.
@@ -58,9 +58,11 @@ class StreamingResponse:
                 schema when ``final_response`` is accessed.
             cost_tracker_callback: Callable(LLMResponse) invoked once the
                 stream is fully consumed, allowing cost to be recorded.
-            start_time: ``time.monotonic()`` timestamp from the provider,
-                used to compute ``latency_ms`` in ``final_response``.
-                Defaults to the time of construction if not provided.
+            start_time: ``time.monotonic()`` timestamp captured by the
+                provider *before* the API call, used to compute
+                ``latency_ms`` in ``final_response``.  Must be provided
+                explicitly — omitting it would silently underestimate
+                latency by excluding stream-establishment time.
             meta: Mutable dict populated by the chunk generator after the
                 stream ends.  Expected keys: ``input_tokens``, ``output_tokens``,
                 ``cost_usd``.  Defaults to an empty dict (all zeros).
@@ -70,7 +72,7 @@ class StreamingResponse:
         self._provider = provider
         self._schema = schema
         self._cost_tracker_callback = cost_tracker_callback
-        self._start_time = start_time if start_time is not None else time.monotonic()
+        self._start_time = start_time
         self._meta: dict = meta if meta is not None else {}
         self._chunks: list[str] = []
         self._exhausted = False

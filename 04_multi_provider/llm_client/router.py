@@ -13,6 +13,8 @@ generate_with_fallback drives the retry/fallback loop:
 
 from __future__ import annotations
 
+import datetime
+
 from llm_client.base import (
     AllProvidersFailedError,
     BaseProvider,
@@ -22,7 +24,7 @@ from llm_client.base import (
     RateLimitError,
     StreamingResponse,
 )
-from llm_client.cost_tracker import CostTracker
+from llm_client.cost_tracker import CostEntry, CostTracker
 
 # ---------------------------------------------------------------------------
 # Model registry
@@ -301,11 +303,11 @@ async def generate_with_fallback(
                     **generate_kwargs,
                 )
                 # Record cost if tracker provided and result is a full response.
+                # Note: this tracker is independent of any tracker set on the
+                # provider instances themselves. Passing the same CostTracker
+                # instance to both a provider constructor AND this function will
+                # result in each call being logged twice.
                 if cost_tracker and isinstance(result, LLMResponse):
-                    import datetime
-
-                    from llm_client.cost_tracker import CostEntry
-
                     cost_tracker.log(
                         CostEntry(
                             ts=datetime.datetime.now(datetime.UTC).isoformat(),
@@ -332,8 +334,14 @@ async def generate_with_fallback(
                 # Retries exhausted → fallback.
                 break
 
+            except (TypeError, AttributeError):
+                # Programming errors (wrong argument types, missing attributes)
+                # should surface immediately rather than be silently treated as
+                # a provider failure and trigger a fallback.
+                raise
+
             except Exception as exc:  # noqa: BLE001
-                # Any other error → immediate fallback.
+                # Unexpected API/SDK error → immediate fallback.
                 last_exc = exc
                 break
 

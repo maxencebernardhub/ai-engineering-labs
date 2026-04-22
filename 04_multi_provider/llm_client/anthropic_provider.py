@@ -162,10 +162,10 @@ class AnthropicProvider(BaseProvider):
                 parsed = None
 
         except AnthropicRateLimitError as exc:
+            # AnthropicRateLimitError is a subclass of APIStatusError, so this
+            # clause is always matched first for 429 responses.
             raise RateLimitError(str(exc)) from exc
-        except APIStatusError as exc:
-            if exc.status_code == 429:
-                raise RateLimitError(str(exc)) from exc
+        except APIStatusError:
             raise
         except APITimeoutError as exc:
             raise ProviderTimeoutError(str(exc)) from exc
@@ -226,10 +226,10 @@ class AnthropicProvider(BaseProvider):
                         meta["output_tokens"] = out
                         meta["cost_usd"] = _cost(model, inp, out)
             except AnthropicRateLimitError as exc:
+                # AnthropicRateLimitError is a subclass of APIStatusError, so this
+                # clause is always matched first for 429 responses.
                 raise RateLimitError(str(exc)) from exc
-            except APIStatusError as exc:
-                if exc.status_code == 429:
-                    raise RateLimitError(str(exc)) from exc
+            except APIStatusError:
                 raise
             except APITimeoutError as exc:
                 raise ProviderTimeoutError(str(exc)) from exc
