@@ -15,6 +15,7 @@ Structured output uses ``response_mime_type="application/json"`` combined
 with ``response_json_schema=MyModel.model_json_schema()`` in the config.
 """
 
+import datetime
 import time
 from pathlib import Path
 
@@ -315,7 +316,6 @@ class GeminiProvider(BaseProvider):
         """Log a completed response to the cost tracker if one is set."""
         if self._cost_tracker is None:
             return
-        import datetime
 
         self._cost_tracker.log(
             CostEntry(

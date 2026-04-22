@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, ValidationError
 
 
-@dataclass
+@dataclass(frozen=True)
 class LLMResponse:
     """Unified response object returned by all providers."""
 

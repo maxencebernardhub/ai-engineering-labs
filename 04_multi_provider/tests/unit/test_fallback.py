@@ -8,6 +8,7 @@ import pytest
 from llm_client.base import (
     AllProvidersFailedError,
     LLMResponse,
+    NoProviderAvailableError,
     ProviderTimeoutError,
     RateLimitError,
     StreamingResponse,
@@ -206,3 +207,31 @@ class TestStreamingFallback:
         assert isinstance(result, StreamingResponse)
         # openai was tried twice (original + 1 retry)
         assert openai_provider.generate.call_count == 2
+
+
+class TestNoProviderAvailable:
+    async def test_empty_available_models_raises_no_provider_available(self):
+        """generate_with_fallback with no models raises NoProviderAvailableError."""
+        with pytest.raises(NoProviderAvailableError):
+            await generate_with_fallback(
+                prompt="hello",
+                providers={"openai": MagicMock()},
+                available_models=[],
+                strategy="cheapest",
+            )
+
+    async def test_prompt_exceeds_all_context_windows_raises_no_provider_available(
+        self,
+    ):
+        """A prompt longer than every model's context window raises NoProviderAvailableError."""
+        # 4 chars × 4 = 1 estimated token — use a prompt that exceeds all windows.
+        # gpt-5.4-nano has the smallest context among registry models (400k tokens),
+        # so 400_001 * 4 chars guarantees the hard filter eliminates everything.
+        huge_prompt = "x" * (400_001 * 4)
+        with pytest.raises(NoProviderAvailableError):
+            await generate_with_fallback(
+                prompt=huge_prompt,
+                providers={"openai": MagicMock()},
+                available_models=["gpt-5.4-nano"],
+                strategy="cheapest",
+            )

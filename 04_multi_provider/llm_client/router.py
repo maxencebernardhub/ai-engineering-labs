@@ -214,7 +214,12 @@ class Router:
                 f"(estimated_tokens={estimated_tokens}, excluded={excluded})"
             )
 
-        field, reverse = _SORT_KEYS.get(strategy, ("cost_input_per_1m", False))
+        if strategy not in _SORT_KEYS:
+            raise ValueError(
+                f"Unknown routing strategy {strategy!r}. "
+                f"Valid values: {list(_SORT_KEYS)}"
+            )
+        field, reverse = _SORT_KEYS[strategy]
         candidates.sort(key=lambda m: MODEL_REGISTRY[m][field], reverse=reverse)
         return candidates[0]
 

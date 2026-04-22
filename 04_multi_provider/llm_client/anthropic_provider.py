@@ -8,6 +8,7 @@ Pricing (as of 2026-04, source: platform.claude.com/docs/en/about-claude/models)
   - claude-haiku-4-5:   $1.00  / 1M input,   $5.00 / 1M output
 """
 
+import datetime
 import time
 from pathlib import Path
 
@@ -248,7 +249,6 @@ class AnthropicProvider(BaseProvider):
         """Log a completed response to the cost tracker if one is set."""
         if self._cost_tracker is None:
             return
-        import datetime
 
         self._cost_tracker.log(
             CostEntry(

@@ -6,6 +6,7 @@ Pricing (as of 2026-04, source: developers.openai.com/api/docs/models):
   - gpt-5.4-nano: $0.20 / 1M input,   $1.25 / 1M output
 """
 
+import datetime
 import time
 from pathlib import Path
 
@@ -236,7 +237,6 @@ class OpenAIProvider(BaseProvider):
         """Log a completed response to the cost tracker if one is set."""
         if self._cost_tracker is None:
             return
-        import datetime
 
         self._cost_tracker.log(
             CostEntry(
