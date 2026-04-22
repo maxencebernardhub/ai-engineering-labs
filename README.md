@@ -18,7 +18,7 @@ to more advanced, production-oriented patterns.
 | [`01_openai/`](01_openai/) | OpenAI | Text generation · Structured outputs · Function calling · Tool use · Streaming · Embeddings · Semantic search · Image generation · Audio (TTS + STT) · Video generation · Token cost tracking · Multi-turn conversations · Error handling · Model comparison | Python scripts + Notebooks | ✅ Available |
 | [`02_anthropic/`](02_anthropic/) | Anthropic Claude | Text generation · Prompt engineering · Prompt evaluation (LLM-as-judge) · Tool use · Agentic loops · Web search · Text editor tool · RAG (chunking, embeddings, BM25, hybrid) · Prompt caching · Extended thinking · Citations · Vision · PDF processing · Code execution · MCP CLI project | Notebooks + CLI project | ✅ Available |
 | [`03_google_ai/`](03_google_ai/) | Google Gemini | Text generation · Multimodal (Images, Audio, Video) · Long context (2M tokens) · Structured outputs · Function calling · Code execution · Model-as-a-Judge · Multimodal Live API · Context Caching · Batch API · Controlled generation (Thinking mode, Hinting) | Notebooks + Scripts | ✅ Available |
-| `04_multi_provider/` | Cross-provider | Side-by-side benchmarks · Cost comparison · Latency profiling · Output quality evaluation · Provider abstraction patterns | Notebooks | 🔵 Planned |
+| [`04_multi_provider/`](04_multi_provider/) | Cross-provider | Unified async interface · Smart routing · Automatic fallback · Cost tracking · Structured output · Streaming | Python package + Notebook | ✅ Available |
 | `05_rag_langchain/` | LangChain | Document loaders · Text splitters · Vector stores · Retrieval chains · Conversational RAG · Evaluation with RAGAS | Notebooks + Scripts | 🔵 Planned |
 | `06_agents_langgraph/` | LangGraph | ReAct agents · Multi-agent workflows · Human-in-the-loop · Stateful graphs · Tool orchestration · Agent memory | Notebooks + Scripts | 🔵 Planned |
 | `07_local_models_llamaindex/` | LlamaIndex + Ollama | Local LLM inference · Offline RAG · Index types · Query engines · Custom retrievers | Notebooks + Scripts | 🔵 Planned |
@@ -63,6 +63,14 @@ to more advanced, production-oriented patterns.
 | [`03_google_ai/notebooks/10_multimodal_live_interactions.ipynb`](03_google_ai/notebooks/10_multimodal_live_interactions.ipynb) | Real-time WebSocket audio and tool calling agents |
 | [`03_google_ai/notebooks/11_advanced_optimization.ipynb`](03_google_ai/notebooks/11_advanced_optimization.ipynb) | Context caching, dynamic retrieval, and grounding |
 | [`03_google_ai/notebooks/13_batch_api_processing.ipynb`](03_google_ai/notebooks/13_batch_api_processing.ipynb) | High-throughput offline processing with 50% cost reduction |
+
+### `04_multi_provider/` — Multi-Provider LLM Client
+
+| Resource | Description |
+| -------- | ----------- |
+| [`04_multi_provider/README.md`](04_multi_provider/README.md) | Full overview, installation, usage examples, and supported models |
+| [`04_multi_provider/llm_client/`](04_multi_provider/llm_client/) | Reusable async package: providers, router, fallback, cost tracker |
+| [`04_multi_provider/demo.ipynb`](04_multi_provider/demo.ipynb) | Interactive walkthrough: 3-provider comparison, structured output, streaming, cost analysis |
 
 ---
 
