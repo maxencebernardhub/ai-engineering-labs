@@ -4,7 +4,6 @@ from collections.abc import AsyncIterator
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from llm_client.router import generate_with_fallback
 
 from llm_client.base import (
     AllProvidersFailedError,
@@ -13,6 +12,7 @@ from llm_client.base import (
     RateLimitError,
     StreamingResponse,
 )
+from llm_client.router import generate_with_fallback
 
 
 def make_response(provider: str = "openai", model: str = "gpt-5.4") -> LLMResponse:

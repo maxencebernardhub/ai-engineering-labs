@@ -1,8 +1,9 @@
 """OpenAI provider using the Responses API (openai >= 2.31.0).
 
-Pricing estimates (as of 2026-04):
-  - gpt-5.4: $2.00 / 1M input tokens, $8.00 / 1M output tokens
-These are approximate; treat them as planning figures, not billing facts.
+Pricing (as of 2026-04, source: developers.openai.com/api/docs/models):
+  - gpt-5.4:      $2.50 / 1M input,  $15.00 / 1M output
+  - gpt-5.4-mini: $0.75 / 1M input,   $4.50 / 1M output
+  - gpt-5.4-nano: $0.20 / 1M input,   $1.25 / 1M output
 """
 
 import time
@@ -30,9 +31,11 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / ".env")
 # Pricing table (USD per 1M tokens)
 # ---------------------------------------------------------------------------
 _PRICING: dict[str, dict[str, float]] = {
-    "gpt-5.4": {"input": 2.00, "output": 8.00},
+    "gpt-5.4": {"input": 2.50, "output": 15.00},
+    "gpt-5.4-mini": {"input": 0.75, "output": 4.50},
+    "gpt-5.4-nano": {"input": 0.20, "output": 1.25},
 }
-_DEFAULT_PRICING = {"input": 2.00, "output": 8.00}
+_DEFAULT_PRICING = {"input": 2.50, "output": 15.00}
 
 
 def _cost(model: str, input_tokens: int, output_tokens: int) -> float:

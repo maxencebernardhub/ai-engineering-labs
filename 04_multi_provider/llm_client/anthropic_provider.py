@@ -1,9 +1,11 @@
 """Anthropic provider using the Messages API (anthropic >= 0.95.0).
 
-Pricing estimates (as of 2026-04):
-  - claude-opus-4-6:    $15.00 / 1M input tokens, $75.00 / 1M output tokens
-  - claude-sonnet-4-6:  $3.00  / 1M input tokens, $15.00 / 1M output tokens
-These are approximate; treat them as planning figures, not billing facts.
+Pricing (as of 2026-04, source: platform.claude.com/docs/en/about-claude/models):
+  - claude-opus-4-7:    $5.00  / 1M input,  $25.00 / 1M output
+  - claude-opus-4-6:    $5.00  / 1M input,  $25.00 / 1M output
+  - claude-sonnet-4-6:  $3.00  / 1M input,  $15.00 / 1M output
+  - claude-sonnet-4-5:  $3.00  / 1M input,  $15.00 / 1M output
+  - claude-haiku-4-5:   $1.00  / 1M input,   $5.00 / 1M output
 """
 
 import time
@@ -31,8 +33,11 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / ".env")
 # Pricing table (USD per 1M tokens)
 # ---------------------------------------------------------------------------
 _PRICING: dict[str, dict[str, float]] = {
-    "claude-opus-4-6": {"input": 15.00, "output": 75.00},
+    "claude-opus-4-7": {"input": 5.00, "output": 25.00},
+    "claude-opus-4-6": {"input": 5.00, "output": 25.00},
     "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},
+    "claude-sonnet-4-5": {"input": 3.00, "output": 15.00},
+    "claude-haiku-4-5": {"input": 1.00, "output": 5.00},
 }
 _DEFAULT_PRICING = {"input": 3.00, "output": 15.00}
 

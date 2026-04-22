@@ -29,20 +29,51 @@ from llm_client.cost_tracker import CostTracker
 # ---------------------------------------------------------------------------
 
 MODEL_REGISTRY: dict[str, dict] = {
+    # ------------------------------------------------------------------
+    # OpenAI  (source: developers.openai.com/api/docs/models, 2026-04)
+    # ------------------------------------------------------------------
     "gpt-5.4": {
         "provider": "openai",
         "context_window": 1_050_000,
         "tier": 3,
-        "cost_input_per_1m": 2.00,
-        "cost_output_per_1m": 8.00,
+        "cost_input_per_1m": 2.50,
+        "cost_output_per_1m": 15.00,
         "latency_ms_estimate": 800,
+    },
+    "gpt-5.4-mini": {
+        "provider": "openai",
+        "context_window": 400_000,
+        "tier": 2,
+        "cost_input_per_1m": 0.75,
+        "cost_output_per_1m": 4.50,
+        "latency_ms_estimate": 400,
+    },
+    "gpt-5.4-nano": {
+        "provider": "openai",
+        "context_window": 400_000,
+        "tier": 1,
+        "cost_input_per_1m": 0.20,
+        "cost_output_per_1m": 1.25,
+        "latency_ms_estimate": 200,
+    },
+    # ------------------------------------------------------------------
+    # Anthropic  (source: platform.claude.com/docs/en/about-claude/models,
+    #             2026-04)
+    # ------------------------------------------------------------------
+    "claude-opus-4-7": {
+        "provider": "anthropic",
+        "context_window": 1_000_000,
+        "tier": 3,
+        "cost_input_per_1m": 5.00,
+        "cost_output_per_1m": 25.00,
+        "latency_ms_estimate": 1200,
     },
     "claude-opus-4-6": {
         "provider": "anthropic",
         "context_window": 1_000_000,
         "tier": 3,
-        "cost_input_per_1m": 15.00,
-        "cost_output_per_1m": 75.00,
+        "cost_input_per_1m": 5.00,
+        "cost_output_per_1m": 25.00,
         "latency_ms_estimate": 1200,
     },
     "claude-sonnet-4-6": {
@@ -53,13 +84,65 @@ MODEL_REGISTRY: dict[str, dict] = {
         "cost_output_per_1m": 15.00,
         "latency_ms_estimate": 600,
     },
+    "claude-sonnet-4-5": {
+        "provider": "anthropic",
+        "context_window": 200_000,
+        "tier": 2,
+        "cost_input_per_1m": 3.00,
+        "cost_output_per_1m": 15.00,
+        "latency_ms_estimate": 600,
+    },
+    "claude-haiku-4-5": {
+        "provider": "anthropic",
+        "context_window": 200_000,
+        "tier": 1,
+        "cost_input_per_1m": 1.00,
+        "cost_output_per_1m": 5.00,
+        "latency_ms_estimate": 300,
+    },
+    # ------------------------------------------------------------------
+    # Gemini  (source: ai.google.dev/gemini-api/docs/pricing, 2026-04)
+    # cost_input_per_1m uses the ≤200k tier for routing estimates.
+    # ------------------------------------------------------------------
     "gemini-3.1-pro": {
         "provider": "gemini",
         "context_window": 1_000_000,
         "tier": 3,
+        "cost_input_per_1m": 2.00,
+        "cost_output_per_1m": 12.00,
+        "latency_ms_estimate": 900,
+    },
+    "gemini-2.5-pro": {
+        "provider": "gemini",
+        "context_window": 1_000_000,
+        "tier": 3,
         "cost_input_per_1m": 1.25,
-        "cost_output_per_1m": 5.00,
-        "latency_ms_estimate": 700,
+        "cost_output_per_1m": 10.00,
+        "latency_ms_estimate": 900,
+    },
+    "gemini-3-flash": {
+        "provider": "gemini",
+        "context_window": 1_000_000,
+        "tier": 2,
+        "cost_input_per_1m": 0.50,
+        "cost_output_per_1m": 3.00,
+        "latency_ms_estimate": 400,
+    },
+    "gemini-2.5-flash": {
+        "provider": "gemini",
+        "context_window": 1_000_000,
+        "tier": 2,
+        "cost_input_per_1m": 0.30,
+        "cost_output_per_1m": 2.50,
+        "latency_ms_estimate": 400,
+    },
+    "gemini-3.1-flash-lite": {
+        "provider": "gemini",
+        "context_window": 1_000_000,
+        "tier": 1,
+        "cost_input_per_1m": 0.25,
+        "cost_output_per_1m": 1.50,
+        "latency_ms_estimate": 200,
     },
 }
 

@@ -1,6 +1,7 @@
 # Multi-Provider LLM Client
 
-A reusable async Python module abstracting OpenAI, Anthropic, and Gemini behind a common interface, with intelligent routing, automatic fallback, and persistent cost tracking.
+Async Python module abstracting OpenAI, Anthropic, and Gemini behind a common interface,
+with intelligent routing, automatic fallback, and persistent cost tracking.
 
 ## Features
 
@@ -108,12 +109,24 @@ print(f"Total cost so far: ${tracker.total_cost():.6f}")
 
 ## Supported models
 
-| Model | Provider | Context window | Tier |
-|---|---|---|---|
-| `gpt-5.4` | openai | 1 050 000 | 3 |
-| `claude-opus-4-6` | anthropic | 1 000 000 | 3 |
-| `claude-sonnet-4-6` | anthropic | 1 000 000 | 2 |
-| `gemini-3.1-pro` | gemini | 1 000 000 | 3 |
+| Model | Provider | Context window | Tier | Input $/MTok | Output $/MTok |
+| --- | --- | --- | --- | --- | --- |
+| `gpt-5.4` | openai | 1 050 000 | 3 | 2.50 | 15.00 |
+| `gpt-5.4-mini` | openai | 400 000 | 2 | 0.75 | 4.50 |
+| `gpt-5.4-nano` | openai | 400 000 | 1 | 0.20 | 1.25 |
+| `claude-opus-4-7` | anthropic | 1 000 000 | 3 | 5.00 | 25.00 |
+| `claude-opus-4-6` | anthropic | 1 000 000 | 3 | 5.00 | 25.00 |
+| `claude-sonnet-4-6` | anthropic | 1 000 000 | 2 | 3.00 | 15.00 |
+| `claude-sonnet-4-5` | anthropic | 200 000 | 2 | 3.00 | 15.00 |
+| `claude-haiku-4-5` | anthropic | 200 000 | 1 | 1.00 | 5.00 |
+| `gemini-3.1-pro` | gemini | 1 000 000 | 3 | 2.00 | 12.00 |
+| `gemini-2.5-pro` | gemini | 1 000 000 | 3 | 1.25 | 10.00 |
+| `gemini-3-flash` | gemini | 1 000 000 | 2 | 0.50 | 3.00 |
+| `gemini-2.5-flash` | gemini | 1 000 000 | 2 | 0.30 | 2.50 |
+| `gemini-3.1-flash-lite` | gemini | 1 000 000 | 1 | 0.25 | 1.50 |
+
+> Gemini prices shown are for prompts ≤ 200k tokens.
+> `gemini-3.1-pro` and `gemini-2.5-pro` apply higher rates above that threshold.
 
 ## Running tests
 

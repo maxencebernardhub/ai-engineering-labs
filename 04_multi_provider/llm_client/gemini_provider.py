@@ -1,8 +1,15 @@
 """Gemini provider using the google-genai SDK (google-genai >= 1.73.0).
 
-Pricing estimates (as of 2026-04):
-  - gemini-3.1-pro: $1.25 / 1M input tokens, $5.00 / 1M output tokens
-These are approximate; treat them as planning figures, not billing facts.
+Pricing (as of 2026-04, source: ai.google.dev/gemini-api/docs/pricing).
+Two models have tiered pricing based on prompt length (threshold: 200k tokens):
+
+  Model                       | Input ≤200k | Input >200k | Output ≤200k | Output >200k
+  ----------------------------|-------------|-------------|--------------|-------------
+  gemini-3.1-pro-preview      |       $2.00 |       $4.00 |       $12.00 |       $18.00
+  gemini-2.5-pro              |       $1.25 |       $2.50 |       $10.00 |       $15.00
+  gemini-3-flash-preview      |       $0.50 |       $0.50 |        $3.00 |        $3.00
+  gemini-2.5-flash            |       $0.30 |       $0.30 |        $2.50 |        $2.50
+  gemini-3.1-flash-lite-preview|      $0.25 |       $0.25 |        $1.50 |        $1.50
 
 Structured output uses ``response_mime_type="application/json"`` combined
 with ``response_json_schema=MyModel.model_json_schema()`` in the config.
@@ -33,25 +40,60 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent.parent / ".env")
 # ---------------------------------------------------------------------------
 # Pricing table (USD per 1M tokens)
 # ---------------------------------------------------------------------------
+# Pricing uses tiered keys: input_low/input_high/output_low/output_high
+# where "low" = prompt ≤200k tokens, "high" = prompt >200k tokens.
 _PRICING: dict[str, dict[str, float]] = {
-    "gemini-3.1-pro": {"input": 1.25, "output": 5.00},
-    "gemini-3.1-pro-preview": {"input": 1.25, "output": 5.00},
+    "gemini-3.1-pro-preview": {
+        "input_low": 2.00,
+        "input_high": 4.00,
+        "output_low": 12.00,
+        "output_high": 18.00,
+    },
+    "gemini-2.5-pro": {
+        "input_low": 1.25,
+        "input_high": 2.50,
+        "output_low": 10.00,
+        "output_high": 15.00,
+    },
+    "gemini-3-flash-preview": {
+        "input_low": 0.50,
+        "input_high": 0.50,
+        "output_low": 3.00,
+        "output_high": 3.00,
+    },
+    "gemini-2.5-flash": {
+        "input_low": 0.30,
+        "input_high": 0.30,
+        "output_low": 2.50,
+        "output_high": 2.50,
+    },
+    "gemini-3.1-flash-lite-preview": {
+        "input_low": 0.25,
+        "input_high": 0.25,
+        "output_low": 1.50,
+        "output_high": 1.50,
+    },
 }
-_DEFAULT_PRICING = {"input": 1.25, "output": 5.00}
+_DEFAULT_PRICING = {
+    "input_low": 1.25,
+    "input_high": 2.50,
+    "output_low": 10.00,
+    "output_high": 15.00,
+}
 
-# Map of friendly/canonical model names to the actual API model identifiers.
-# This allows tests and callers to use stable names without knowing the exact
-# preview suffix required by the Gemini API at a given point in time.
+# Friendly aliases → actual Gemini API model identifiers.
 _MODEL_ALIASES: dict[str, str] = {
     "gemini-3.1-pro": "gemini-3.1-pro-preview",
+    "gemini-3-flash": "gemini-3-flash-preview",
+    "gemini-3.1-flash-lite": "gemini-3.1-flash-lite-preview",
 }
 
 
 def _cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    """Compute approximate cost in USD for a given model and token counts.
+    """Compute cost in USD using tiered pricing (threshold: 200k input tokens).
 
     Args:
-        model: Gemini model name.
+        model: Gemini API model name (after alias resolution).
         input_tokens: Number of input/prompt tokens.
         output_tokens: Number of output/completion tokens.
 
@@ -59,9 +101,10 @@ def _cost(model: str, input_tokens: int, output_tokens: int) -> float:
         Estimated cost in USD.
     """
     pricing = _PRICING.get(model, _DEFAULT_PRICING)
+    tier = "high" if input_tokens > 200_000 else "low"
     return (
-        input_tokens * pricing["input"] / 1_000_000
-        + output_tokens * pricing["output"] / 1_000_000
+        input_tokens * pricing[f"input_{tier}"] / 1_000_000
+        + output_tokens * pricing[f"output_{tier}"] / 1_000_000
     )
 
 

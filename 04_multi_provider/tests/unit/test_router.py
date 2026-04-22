@@ -33,7 +33,9 @@ class TestHardFilters:
             router.select(huge_prompt, list(MODEL_REGISTRY.keys()))
 
     def test_all_providers_filtered_raises_no_provider_available(self, router: Router):
-        """When every model is in the exclude set, NoProviderAvailableError is raised."""
+        """
+        When every model is in the exclude set, NoProviderAvailableError is raised.
+        """
         all_excluded = set(MODEL_REGISTRY.keys())
         with pytest.raises(NoProviderAvailableError):
             router.select("hello", list(MODEL_REGISTRY.keys()), exclude=all_excluded)

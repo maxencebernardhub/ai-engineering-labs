@@ -2,15 +2,16 @@
 
 ## Current Status
 
-**Phase**: 3 — Implementation COMPLETE. All 20 unit tests passing.
+**Phase**: Implementation complete — 20 unit tests + 12 integration tests passing.
 **Branch**: `feat/04-multi-provider-lab`
-**Last updated**: 2026-04-21
+**Last updated**: 2026-04-22
 
 ---
 
 ## Feature Brief
 
-See full spec: [`docs/specs/2026-04-14-multi-provider-llm-client.md`](docs/specs/2026-04-14-multi-provider-llm-client.md)
+See full spec:
+[`docs/specs/2026-04-14-multi-provider-llm-client.md`](docs/specs/2026-04-14-multi-provider-llm-client.md)
 
 **Goal**: Build a reusable async Python module `llm_client/` abstracting OpenAI, Anthropic,
 and Gemini behind a common interface, with intelligent routing, automatic fallback, and
@@ -20,10 +21,10 @@ persistent cost tracking.
 
 ## Implementation Plan
 
-### Files to Create or Modify
+### Files Created or Modified
 
 | File | Description |
-|---|---|
+| --- | --- |
 | `pyproject.toml` | Project config, dependencies, Ruff, pytest marks |
 | `llm_client/base.py` | `LLMResponse`, `StreamingResponse`, `BaseProvider` ABC, custom exceptions |
 | `llm_client/cost_tracker.py` | `CostTracker`: in-memory buffer + `.jsonl` auto-flush |
@@ -45,6 +46,7 @@ persistent cost tracking.
 ### Test Cases
 
 **`test_cost_tracker.py`**
+
 - `test_log_entry_has_all_fields`
 - `test_multiple_calls_accumulate_in_memory`
 - `test_flush_writes_jsonl_file`
@@ -52,6 +54,7 @@ persistent cost tracking.
 - `test_total_cost_sums_correctly`
 
 **`test_router.py`**
+
 - `test_hard_filter_excludes_model_with_insufficient_context`
 - `test_all_providers_filtered_raises_no_provider_available`
 - `test_strategy_cheapest_selects_lowest_cost_provider`
@@ -60,6 +63,7 @@ persistent cost tracking.
 - `test_exclude_parameter_removes_provider_from_selection`
 
 **`test_fallback.py`**
+
 - `test_rate_limit_error_triggers_immediate_fallback`
 - `test_timeout_retries_once_before_fallback`
 - `test_generic_exception_triggers_immediate_fallback`
@@ -69,6 +73,7 @@ persistent cost tracking.
 - `test_streaming_fallback_on_timeout`
 
 **`test_providers.py`** (integration, `@pytest.mark.integration`)
+
 - `test_openai_generate_returns_llm_response`
 - `test_anthropic_generate_returns_llm_response`
 - `test_gemini_generate_returns_llm_response`
@@ -87,7 +92,7 @@ persistent cost tracking.
 ### Steps
 
 | # | Step | Status |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Project setup: `pyproject.toml` + directory structure + `uv sync` | `done` |
 | 2 | `base.py`: `LLMResponse`, `StreamingResponse`, `BaseProvider`, exceptions | `done` |
 | 3 | `cost_tracker.py` + `test_cost_tracker.py` (TDD) | `done` |
@@ -112,22 +117,32 @@ persistent cost tracking.
 - **Fallback**: re-runs router excluding failed provider; `429` → immediate fallback;
   timeout → 1 retry then fallback; all others → immediate fallback
 - **Cost tracker**: in-memory accumulation + auto-flush to `.jsonl` after each call
-- **Token estimation**: `len(prompt) / 4` for context window hard filter (known limitation,
+- **Gemini tiered pricing**: `_cost()` applies ≤200k / >200k tier based on `input_tokens`
+- **Gemini model aliases**: friendly names (e.g. `gemini-3.1-pro`) resolve to API preview
+  identifiers via `_MODEL_ALIASES` in `gemini_provider.py`
+- **Token estimation**: `len(prompt) // 4` for context window hard filter (known limitation,
   documented in README)
 - **No LiteLLM**: built from scratch for learning purposes
 
-## Known Context Window Limits (model-specific)
-
-| Model | Context window |
-|---|---|
-| Claude Opus 4.6 / Sonnet 4.6 | 1M tokens |
-| GPT-5.4 | 1.05M tokens |
-| Gemini 3.1 Pro | 1M tokens |
-
 ---
 
-## Risks & Open Questions
+## Supported Models
 
-- Exact syntax for OpenAI `client.responses.parse()` and Gemini
-  `config={"response_json_schema": ...}` to be verified against live docs at implementation time
-- `pytest-asyncio` required for all async tests
+| Model alias | Provider | Context window | Tier | Input $/MTok | Output $/MTok |
+| --- | --- | --- | --- | --- | --- |
+| `gpt-5.4` | openai | 1 050 000 | 3 | 2.50 | 15.00 |
+| `gpt-5.4-mini` | openai | 400 000 | 2 | 0.75 | 4.50 |
+| `gpt-5.4-nano` | openai | 400 000 | 1 | 0.20 | 1.25 |
+| `claude-opus-4-7` | anthropic | 1 000 000 | 3 | 5.00 | 25.00 |
+| `claude-opus-4-6` | anthropic | 1 000 000 | 3 | 5.00 | 25.00 |
+| `claude-sonnet-4-6` | anthropic | 1 000 000 | 2 | 3.00 | 15.00 |
+| `claude-sonnet-4-5` | anthropic | 200 000 | 2 | 3.00 | 15.00 |
+| `claude-haiku-4-5` | anthropic | 200 000 | 1 | 1.00 | 5.00 |
+| `gemini-3.1-pro` | gemini | 1 000 000 | 3 | 2.00 | 12.00 |
+| `gemini-2.5-pro` | gemini | 1 000 000 | 3 | 1.25 | 10.00 |
+| `gemini-3-flash` | gemini | 1 000 000 | 2 | 0.50 | 3.00 |
+| `gemini-2.5-flash` | gemini | 1 000 000 | 2 | 0.30 | 2.50 |
+| `gemini-3.1-flash-lite` | gemini | 1 000 000 | 1 | 0.25 | 1.50 |
+
+> Gemini input/output prices shown are for prompts ≤ 200k tokens.
+> `gemini-3.1-pro` and `gemini-2.5-pro` apply higher rates above that threshold.
