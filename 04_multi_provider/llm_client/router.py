@@ -223,6 +223,9 @@ class Router:
 # Fallback logic
 # ---------------------------------------------------------------------------
 
+# Module-level singleton — Router is stateless, no need to reinstantiate per call.
+_router = Router()
+
 
 async def generate_with_fallback(
     prompt: str,
@@ -261,13 +264,12 @@ async def generate_with_fallback(
         AllProvidersFailedError: When every eligible provider has been tried
             and all failed.
     """
-    router = Router()
     current_excluded: set[str] = set(excluded or set())
     failures: list[tuple[str, Exception]] = []
 
     while True:
         # Let NoProviderAvailableError propagate when nothing is left.
-        model = router.select(
+        model = _router.select(
             prompt,
             available_models,
             strategy=strategy,
@@ -278,15 +280,13 @@ async def generate_with_fallback(
         provider = providers.get(provider_name)
 
         if provider is None:
-            # Provider not instantiated — treat as unavailable.
+            # Provider not instantiated — exclude this model and let the router
+            # try the next candidate.  If no candidates remain, router.select()
+            # will raise NoProviderAvailableError on the next iteration.
             current_excluded.add(model)
             failures.append(
                 (model, RuntimeError(f"Provider '{provider_name}' not found"))
             )
-            # Check whether any models remain before looping.
-            remaining = [m for m in available_models if m not in current_excluded]
-            if not remaining:
-                raise AllProvidersFailedError(f"All providers failed: {failures}")
             continue
 
         # --- Attempt call (with one retry on timeout) ---

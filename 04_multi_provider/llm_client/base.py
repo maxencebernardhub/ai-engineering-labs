@@ -2,9 +2,8 @@
 
 import time
 from abc import ABC, abstractmethod
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from dataclasses import dataclass
-from typing import Any
 
 from pydantic import BaseModel, ValidationError
 
@@ -14,7 +13,7 @@ class LLMResponse:
     """Unified response object returned by all providers."""
 
     text: str
-    parsed: Any | None
+    parsed: BaseModel | None
     input_tokens: int
     output_tokens: int
     model: str
@@ -43,7 +42,7 @@ class StreamingResponse:
         model: str,
         provider: str,
         schema: type[BaseModel] | None,
-        cost_tracker_callback,
+        cost_tracker_callback: Callable[["LLMResponse"], None] | None,
         start_time: float,
         meta: dict | None = None,
     ) -> None:

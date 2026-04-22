@@ -78,10 +78,11 @@ class TestSortingStrategies:
     def test_strategy_most_capable_selects_highest_tier_provider(
         self, router: Router, all_models: list[str]
     ):
-        """'most_capable' strategy must return the model with the highest tier."""
+        """'most_capable' strategy must return a model with the highest tier.
+
+        Multiple models share tier=3, so we assert on the tier value rather
+        than on a specific model name to avoid order-dependent fragility.
+        """
         result = router.select("hello", all_models, strategy="most_capable")
-        most_capable = max(
-            all_models,
-            key=lambda m: MODEL_REGISTRY[m]["tier"],
-        )
-        assert result == most_capable
+        max_tier = max(MODEL_REGISTRY[m]["tier"] for m in all_models)
+        assert MODEL_REGISTRY[result]["tier"] == max_tier
