@@ -18,6 +18,10 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
+# Cost tracking logs (generated at runtime)
+costs.jsonl
+**/costs.jsonl
+
 # OS / editor noise
 .DS_Store
 .vscode/
