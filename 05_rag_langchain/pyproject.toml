@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-langchain"
+version = "0.1.0"
+description = "Complete RAG pipeline with LangChain, ChromaDB, and Streamlit."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "langchain>=1.2.15",
+    "langchain-community>=0.4.1",
+    "langchain-openai>=1.2.1",
+    "langchain-anthropic>=1.4.1",
+    "langchain-google-genai>=4.2.2",
+    "langchain-huggingface>=1.2.2",
+    "langchain-chroma>=1.1.0",
+    "chromadb>=1.5.8",
+    "sentence-transformers>=5.4.1",
+    "streamlit>=1.56.0",
+    "pypdf>=6.10.2",
+    "ragas>=0.4.3,<0.5",
+    "python-dotenv>=1.2.2",
+]
+
+[project.optional-dependencies]
+notebooks = [
+    "ipykernel>=7.2.0",
+    "jupyterlab>=4.5.6",
+    "matplotlib>=3.10.9",
+    "numpy>=2.4.4",
+]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-mock>=3.15.1",
+]
+
+[tool.setuptools]
+py-modules = []
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests requiring real embeddings + ChromaDB (deselect with '-m \"not integration\"')",
+]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP"]
