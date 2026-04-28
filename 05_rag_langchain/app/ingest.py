@@ -52,11 +52,15 @@ def is_already_indexed(md5: str, collection: Any) -> bool:
     return len(result["ids"]) > 0
 
 
-def ingest_document(file_path: Path, vectorstore: Any) -> tuple[bool, int]:
+def ingest_document(
+    file_path: Path, vectorstore: Any, source_name: str | None = None
+) -> tuple[bool, int]:
     """Full ingestion pipeline for a single file.
 
     Returns (skipped, num_chunks).
     skipped=True means the document was already indexed (MD5 dedup).
+    source_name overrides file_path.name in chunk metadata (useful when
+    file_path points to a temp file).
     """
     md5 = compute_md5(file_path)
 
@@ -66,9 +70,10 @@ def ingest_document(file_path: Path, vectorstore: Any) -> tuple[bool, int]:
     documents = load_document(file_path)
     chunks = chunk_documents(documents)
 
+    display_name = source_name if source_name is not None else file_path.name
     for chunk in chunks:
         chunk.metadata["md5"] = md5
-        chunk.metadata["source_file"] = file_path.name
+        chunk.metadata["source_file"] = display_name
 
     vectorstore.add_documents(chunks)
     return False, len(chunks)

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: TDD implementation in progress — step 7/12.
+**Phase**: TDD implementation in progress — step 8/12.
 **Branch**: `feat/05-rag-langchain`
 **Last updated**: 2026-04-28
 
@@ -66,8 +66,8 @@ deployable Streamlit app.
 | 4 | `app/ingest.py` + `tests/unit/test_ingest.py` (TDD) | `done` |
 | 5 | `app/query.py` + `tests/unit/test_query.py` (TDD) | `done` |
 | 6 | `tests/integration/test_pipeline.py` (tmp_path ChromaDB isolation) | `done` |
-| 7 | `app/app.py` (Streamlit UI) | `in_progress` |
-| 8 | `01_embeddings_basics.ipynb` | `todo` |
+| 7 | `app/app.py` (Streamlit UI) | `done` |
+| 8 | `01_embeddings_basics.ipynb` | `in_progress` |
 | 9 | `02_chromadb_indexing.ipynb` | `todo` |
 | 10 | `03_rag_pipeline.ipynb` (LCEL + reranking + query expansion) | `todo` |
 | 11 | `04_rag_evaluation.ipynb` (RAGAS + Q&A ground-truth dataset) | `todo` |

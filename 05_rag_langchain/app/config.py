@@ -59,11 +59,11 @@ AVAILABLE_MODELS: dict[str, str] = {
     "OpenAI — GPT-5.5": "openai:gpt-5.5",
     "OpenAI — GPT-5.4": "openai:gpt-5.4",
     "OpenAI — GPT-5.4 Mini": "openai:gpt-5.4-mini",
-    "Google — Gemini 3.1 Pro": "google-genai:gemini-3.1-pro-preview",
-    "Google — Gemini 3.1 Flash Lite": "google-genai:gemini-3.1-flash-lite-preview",
-    "Google — Gemini 3 Flash": "google-genai:gemini-3-flash-preview",
-    "Google — Gemini 2.5 Pro": "google-genai:gemini-2.5-pro",
-    "Google — Gemini 2.5 Flash": "google-genai:gemini-2.5-flash",
+    "Google — Gemini 3.1 Pro": "google_genai:gemini-3.1-pro-preview",
+    "Google — Gemini 3.1 Flash Lite": "google_genai:gemini-3.1-flash-lite-preview",
+    "Google — Gemini 3 Flash": "google_genai:gemini-3-flash-preview",
+    "Google — Gemini 2.5 Pro": "google_genai:gemini-2.5-pro",
+    "Google — Gemini 2.5 Flash": "google_genai:gemini-2.5-flash",
 }
 
 DEFAULT_MODEL = "Anthropic — Claude Sonnet 4.6"
