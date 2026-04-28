@@ -1,2 +1,6 @@
 # ChromaDB persisted data (generated at runtime)
 app/chroma_db/
+
+# Sample documents (bring your own — see README for sources)
+sample_docs/*
+!sample_docs/.gitkeep
