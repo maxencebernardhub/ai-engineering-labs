@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: TDD implementation in progress — step 3/12.
+**Phase**: TDD implementation in progress — step 6/12.
 **Branch**: `feat/05-rag-langchain`
 **Last updated**: 2026-04-28
 
@@ -62,10 +62,10 @@ deployable Streamlit app.
 | --- | --- | --- |
 | 1 | Project setup: `pyproject.toml`, `.gitignore`, dirs, `uv sync` | `done` |
 | 2 | `sample_docs/` — documents gitignored, sources in README | `done` |
-| 3 | `app/__init__.py` + `app/config.py` | `in_progress` |
-| 4 | `app/ingest.py` + `tests/unit/test_ingest.py` (TDD) | `todo` |
-| 5 | `app/query.py` + `tests/unit/test_query.py` (TDD) | `todo` |
-| 6 | `tests/integration/test_pipeline.py` (tmp_path ChromaDB isolation) | `todo` |
+| 3 | `app/__init__.py` + `app/config.py` | `done` |
+| 4 | `app/ingest.py` + `tests/unit/test_ingest.py` (TDD) | `done` |
+| 5 | `app/query.py` + `tests/unit/test_query.py` (TDD) | `done` |
+| 6 | `tests/integration/test_pipeline.py` (tmp_path ChromaDB isolation) | `in_progress` |
 | 7 | `app/app.py` (Streamlit UI) | `todo` |
 | 8 | `01_embeddings_basics.ipynb` | `todo` |
 | 9 | `02_chromadb_indexing.ipynb` | `todo` |
