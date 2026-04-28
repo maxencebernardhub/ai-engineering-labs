@@ -1,3 +1,15 @@
+"""
+Lab 05 — RAG with LangChain: retrieval and generation pipeline.
+
+Implements the full RAG query flow as explicit LCEL steps (no agents):
+1. Query expansion  — LLM generates 2 alternative phrasings to broaden recall
+2. Retrieval        — similarity search over ChromaDB for each expanded query
+3. Reranking        — CrossEncoder scores and re-orders candidate chunks
+4. Generation       — RAG prompt | LLM | StrOutputParser LCEL chain
+
+Entry point: answer_question(question, vectorstore, llm) → {"answer", "sources"}
+"""
+
 from typing import Any
 
 from langchain_core.documents import Document

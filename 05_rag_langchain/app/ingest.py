@@ -1,3 +1,15 @@
+"""
+Lab 05 — RAG with LangChain: document ingestion pipeline.
+
+Responsibilities:
+- Load PDF, TXT, and Markdown files into LangChain Documents
+- Split documents into overlapping chunks (RecursiveCharacterTextSplitter)
+- Deduplicate via MD5 hash to avoid re-indexing the same file
+- Store chunks with metadata (md5, source_file) into a ChromaDB vectorstore
+
+Entry point: ingest_document(file_path, vectorstore, source_name=None)
+"""
+
 import hashlib
 from pathlib import Path
 from typing import Any

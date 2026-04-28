@@ -1,3 +1,11 @@
+"""
+Lab 05 — RAG with LangChain: runtime configuration.
+
+Single source of truth for all constants: paths, model identifiers, chunking
+parameters, and retrieval settings. Loaded once at import time; every other
+module reads from here rather than hard-coding values.
+"""
+
 from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv

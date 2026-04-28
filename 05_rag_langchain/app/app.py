@@ -1,3 +1,14 @@
+"""
+Lab 05 — RAG with LangChain: Streamlit application entry point.
+
+Provides an interactive UI for the full RAG pipeline:
+- Sidebar: LLM provider/model selector, vector store stats and controls
+- Left column: document upload (PDF, TXT, MD) with ingestion feedback
+- Right column: question input, generated answer, and sourced chunks
+
+Run with: streamlit run app/app.py (from the 05_rag_langchain/ directory)
+"""
+
 import sys
 import tempfile
 from pathlib import Path
