@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: Implementation plan validated — ready for TDD implementation.
+**Phase**: TDD implementation in progress — step 3/12.
 **Branch**: `feat/05-rag-langchain`
 **Last updated**: 2026-04-28
 
@@ -60,9 +60,9 @@ deployable Streamlit app.
 
 | # | Step | Status |
 | --- | --- | --- |
-| 1 | Project setup: `pyproject.toml`, `.gitignore`, dirs, `uv sync` | `todo` |
-| 2 | `sample_docs/` — 3 English test documents (PDF + TXT + MD) | `todo` |
-| 3 | `app/__init__.py` + `app/config.py` | `todo` |
+| 1 | Project setup: `pyproject.toml`, `.gitignore`, dirs, `uv sync` | `done` |
+| 2 | `sample_docs/` — documents gitignored, sources in README | `done` |
+| 3 | `app/__init__.py` + `app/config.py` | `in_progress` |
 | 4 | `app/ingest.py` + `tests/unit/test_ingest.py` (TDD) | `todo` |
 | 5 | `app/query.py` + `tests/unit/test_query.py` (TDD) | `todo` |
 | 6 | `tests/integration/test_pipeline.py` (tmp_path ChromaDB isolation) | `todo` |
