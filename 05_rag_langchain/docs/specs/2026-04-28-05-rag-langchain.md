@@ -53,3 +53,62 @@ clients assessing RAG depth of knowledge.
 - Each notebook standalone and executable independently
 - All code, docstrings, comments, README, PROJECT_STATE.md in English
 - `llm_client/` from lab 04 referenced in README as pedagogical comparison, not used in code
+
+---
+
+## Key Design Decisions
+
+### Embeddings: `BAAI/bge-m3` over OpenAI `text-embedding-3-*`
+
+**Chosen**: `BAAI/bge-m3` via `langchain-huggingface` + `sentence-transformers`
+
+**Rationale**:
+
+- Runs fully locally — no API key, no cost, no network dependency
+- Multilingual (100+ languages including French) — works on any uploaded document
+- Competitive retrieval quality on standard benchmarks (BEIR, MTEB)
+- Consistent with the "standalone, deployable locally" goal of the lab
+
+**Trade-off**: First run downloads ~570MB. Subsequent runs use the cached model.
+OpenAI embeddings would be faster to set up and slightly higher quality on English,
+but introduce a paid API dependency that conflicts with the local-first constraint.
+
+### LLM abstraction: LCEL chains over LangChain agents
+
+**Chosen**: `init_chat_model()` + LCEL (`|` operator)
+
+**Rationale**:
+
+- A RAG pipeline is a deterministic, linear flow: retrieve → augment → generate.
+  An agent adds autonomous tool-selection logic that is not needed here and would
+  obscure the pipeline structure.
+- LCEL chains are explicit and inspectable — every step is visible in the code,
+  which is ideal for a pedagogical lab.
+- `init_chat_model()` makes the provider fully configurable at runtime (one string
+  to change), enabling the Streamlit selectbox without any architectural change.
+- Agents (AgentExecutor or LangGraph) are excluded by the lab constraints anyway.
+
+**Trade-off**: LCEL chains are less flexible than agents for open-ended tasks, but
+that flexibility is not needed here and would add unnecessary complexity.
+
+### Reranking: CrossEncoder over score threshold filtering
+
+**Chosen**: `cross-encoder/ms-marco-MiniLM-L-6-v2` (sentence-transformers)
+
+**Rationale**:
+
+- Cosine similarity on embeddings measures semantic proximity, not answer relevance.
+  A CrossEncoder reads the (question, chunk) pair together and scores true relevance.
+- Lightweight model (~85MB), runs on CPU, negligible latency for top-5 reranking.
+- Clearly illustrates a key RAG quality improvement technique for portfolio purposes.
+
+### Query expansion: LLM-based rephrasing over HyDE
+
+**Chosen**: LLM generates 2-3 alternative phrasings of the user question
+
+**Rationale**:
+
+- Simple to implement and explain: one LLM call, structured output (list of strings),
+  then merge + deduplicate retrieved chunks across all variants.
+- HyDE (generating a hypothetical answer to guide embedding) is more powerful but
+  harder to reason about and adds latency without clear gain for this use case.

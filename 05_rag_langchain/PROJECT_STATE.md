@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: Brainstorming complete — Feature Brief validated, moving to implementation planning.
+**Phase**: Implementation plan validated — ready for TDD implementation.
 **Branch**: `feat/05-rag-langchain`
 **Last updated**: 2026-04-28
 
@@ -60,13 +60,15 @@ deployable Streamlit app.
 
 | # | Step | Status |
 | --- | --- | --- |
-| 1 | Project setup: `pyproject.toml` + directory structure + `uv sync` | `todo` |
-| 2 | `01_embeddings_basics.ipynb` | `todo` |
-| 3 | `02_chromadb_indexing.ipynb` | `todo` |
-| 4 | `app/config.py` + `app/ingest.py` | `todo` |
-| 5 | `app/query.py` (retrieval + reranking + query expansion + generation) | `todo` |
-| 6 | `03_rag_pipeline.ipynb` | `todo` |
-| 7 | `04_rag_evaluation.ipynb` (RAGAS) | `todo` |
-| 8 | `app/app.py` (Streamlit UI) | `todo` |
-| 9 | `sample_docs/` — 2-3 English test documents | `todo` |
-| 10 | `README.md` with architecture diagram + GIF | `todo` |
+| 1 | Project setup: `pyproject.toml`, `.gitignore`, dirs, `uv sync` | `todo` |
+| 2 | `sample_docs/` — 3 English test documents (PDF + TXT + MD) | `todo` |
+| 3 | `app/__init__.py` + `app/config.py` | `todo` |
+| 4 | `app/ingest.py` + `tests/unit/test_ingest.py` (TDD) | `todo` |
+| 5 | `app/query.py` + `tests/unit/test_query.py` (TDD) | `todo` |
+| 6 | `tests/integration/test_pipeline.py` (tmp_path ChromaDB isolation) | `todo` |
+| 7 | `app/app.py` (Streamlit UI) | `todo` |
+| 8 | `01_embeddings_basics.ipynb` | `todo` |
+| 9 | `02_chromadb_indexing.ipynb` | `todo` |
+| 10 | `03_rag_pipeline.ipynb` (LCEL + reranking + query expansion) | `todo` |
+| 11 | `04_rag_evaluation.ipynb` (RAGAS + Q&A ground-truth dataset) | `todo` |
+| 12 | `README.md` with architecture diagram + GIF | `todo` |
