@@ -19,7 +19,7 @@ to more advanced, production-oriented patterns.
 | [`02_anthropic/`](02_anthropic/) | Anthropic Claude | Text generation · Prompt engineering · Prompt evaluation (LLM-as-judge) · Tool use · Agentic loops · Web search · Text editor tool · RAG (chunking, embeddings, BM25, hybrid) · Prompt caching · Extended thinking · Citations · Vision · PDF processing · Code execution · MCP CLI project | Notebooks + CLI project | ✅ Available |
 | [`03_google_ai/`](03_google_ai/) | Google Gemini | Text generation · Multimodal (Images, Audio, Video) · Long context (2M tokens) · Structured outputs · Function calling · Code execution · Model-as-a-Judge · Multimodal Live API · Context Caching · Batch API · Controlled generation (Thinking mode, Hinting) | Notebooks + Scripts | ✅ Available |
 | [`04_multi_provider/`](04_multi_provider/) | Cross-provider | Unified async interface · Smart routing · Automatic fallback · Cost tracking · Structured output · Streaming | Python package + Notebook | ✅ Available |
-| `05_rag_langchain/` | LangChain | Document loaders · Text splitters · Vector stores · Retrieval chains · Conversational RAG · Evaluation with RAGAS | Notebooks + Scripts | 🔵 Planned |
+| [`05_rag_langchain/`](05_rag_langchain/) | LangChain | Embeddings · Chunking strategies · ChromaDB · Query expansion · CrossEncoder reranking · LCEL chains · RAGAS evaluation | Notebooks + Streamlit app | ✅ Available |
 | `06_agents_langgraph/` | LangGraph | ReAct agents · Multi-agent workflows · Human-in-the-loop · Stateful graphs · Tool orchestration · Agent memory | Notebooks + Scripts | 🔵 Planned |
 | `07_local_models_llamaindex/` | LlamaIndex + Ollama | Local LLM inference · Offline RAG · Index types · Query engines · Custom retrievers | Notebooks + Scripts | 🔵 Planned |
 | `08_fastapi_backend/` | FastAPI | REST API for AI endpoints · Streaming responses · Auth patterns · Background tasks · OpenAPI schema | Scripts + App | 🔵 Planned |
@@ -71,6 +71,17 @@ to more advanced, production-oriented patterns.
 | [`04_multi_provider/README.md`](04_multi_provider/README.md) | Full overview, installation, usage examples, and supported models |
 | [`04_multi_provider/llm_client/`](04_multi_provider/llm_client/) | Reusable async package: providers, router, fallback, cost tracker |
 | [`04_multi_provider/demo.ipynb`](04_multi_provider/demo.ipynb) | Interactive walkthrough: 3-provider comparison, structured output, streaming, cost analysis |
+
+### `05_rag_langchain/` — RAG Pipeline with LangChain
+
+| Resource | Description |
+| -------- | ----------- |
+| [`05_rag_langchain/README.md`](05_rag_langchain/README.md) | Architecture diagram, setup instructions, project structure |
+| [`05_rag_langchain/01_embeddings_basics.ipynb`](05_rag_langchain/01_embeddings_basics.ipynb) | Embeddings from scratch: cosine similarity, semantic search, PCA |
+| [`05_rag_langchain/02_chromadb_indexing.ipynb`](05_rag_langchain/02_chromadb_indexing.ipynb) | Chunking strategies comparison + ChromaDB CRUD |
+| [`05_rag_langchain/03_rag_pipeline.ipynb`](05_rag_langchain/03_rag_pipeline.ipynb) | Full LCEL chain: query expansion → retrieval → CrossEncoder reranking → generation |
+| [`05_rag_langchain/04_rag_evaluation.ipynb`](05_rag_langchain/04_rag_evaluation.ipynb) | RAGAS evaluation: Faithfulness, Answer Relevancy, Context Precision/Recall |
+| [`05_rag_langchain/app/app.py`](05_rag_langchain/app/app.py) | Streamlit app: upload documents, select LLM provider, ask questions |
 
 ---
 
