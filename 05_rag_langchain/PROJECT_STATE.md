@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: TDD implementation in progress — step 10/12.
+**Phase**: TDD implementation in progress — step 11/12.
 **Branch**: `feat/05-rag-langchain`
 **Last updated**: 2026-04-29
 
@@ -69,6 +69,6 @@ deployable Streamlit app.
 | 7 | `app/app.py` (Streamlit UI) | `done` |
 | 8 | `01_embeddings_basics.ipynb` | `done` |
 | 9 | `02_chromadb_indexing.ipynb` | `done` |
-| 10 | `03_rag_pipeline.ipynb` (LCEL + reranking + query expansion) | `in_progress` |
-| 11 | `04_rag_evaluation.ipynb` (RAGAS + Q&A ground-truth dataset) | `todo` |
+| 10 | `03_rag_pipeline.ipynb` (LCEL + reranking + query expansion) | `done` |
+| 11 | `04_rag_evaluation.ipynb` (RAGAS + Q&A ground-truth dataset) | `in_progress` |
 | 12 | `README.md` with architecture diagram + GIF | `todo` |
