@@ -1,0 +1,82 @@
+[
+  {
+    "id": "lead_001",
+    "name": "Alice Moreau",
+    "company": "Tech Solutions SAS",
+    "email": "a.moreau@techsolutions.fr",
+    "status": "prospect",
+    "notes": ["First contact via website form", "Interested in the Premium plan"],
+    "created_at": "2026-04-01",
+    "updated_at": "2026-04-01"
+  },
+  {
+    "id": "lead_002",
+    "name": "Bruno Lefèvre",
+    "company": "Dupont & Fils SARL",
+    "email": "b.lefevre@dupont-fils.fr",
+    "status": "prospect",
+    "notes": ["Met at Paris trade show"],
+    "created_at": "2026-04-10",
+    "updated_at": "2026-04-10"
+  },
+  {
+    "id": "lead_003",
+    "name": "Clara Nguyen",
+    "company": "InnovatePro",
+    "email": "c.nguyen@innovatepro.fr",
+    "status": "qualified",
+    "notes": ["Discovery call done", "Budget confirmed: 15k€/year", "Decision expected end of May"],
+    "created_at": "2026-03-15",
+    "updated_at": "2026-04-20"
+  },
+  {
+    "id": "lead_004",
+    "name": "David Martin",
+    "company": "Groupe Éclat",
+    "email": "d.martin@groupe-eclat.com",
+    "status": "qualified",
+    "notes": ["Sent proposal on 2026-04-18", "Follow-up call scheduled for 2026-05-06"],
+    "created_at": "2026-03-28",
+    "updated_at": "2026-04-18"
+  },
+  {
+    "id": "lead_005",
+    "name": "Émilie Rousseau",
+    "company": "Meridian Conseil",
+    "email": "e.rousseau@meridian-conseil.fr",
+    "status": "won",
+    "notes": ["Contract signed 2026-04-02", "Onboarding scheduled for 2026-05-05"],
+    "created_at": "2026-02-10",
+    "updated_at": "2026-04-02"
+  },
+  {
+    "id": "lead_006",
+    "name": "François Petit",
+    "company": "Artisans Réunis",
+    "email": "f.petit@artisans-reunis.fr",
+    "status": "won",
+    "notes": ["Contract signed 2026-03-20", "Upsell opportunity identified for Q3"],
+    "created_at": "2026-01-25",
+    "updated_at": "2026-03-20"
+  },
+  {
+    "id": "lead_007",
+    "name": "Géraldine Faure",
+    "company": "BioNord Industries",
+    "email": "g.faure@bionord.fr",
+    "status": "lost",
+    "notes": ["Chose competitor after price negotiation", "May reconsider in 6 months"],
+    "created_at": "2026-02-05",
+    "updated_at": "2026-04-15"
+  },
+  {
+    "id": "lead_008",
+    "name": "Henri Blanc",
+    "company": "Constructions HB",
+    "email": "h.blanc@constructions-hb.fr",
+    "status": "lost",
+    "notes": ["Project cancelled due to budget freeze"],
+    "created_at": "2026-03-01",
+    "updated_at": "2026-04-28"
+  }
+]
