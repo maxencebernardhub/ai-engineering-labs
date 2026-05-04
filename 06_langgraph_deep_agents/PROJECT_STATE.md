@@ -2,12 +2,13 @@
 
 ## Status
 
-Phase 3 in progress — Step 1 (project setup) complete. Starting Step 2 (shared/leads_store.py TDD).
+Phase 3 in progress — Step 2 complete. Starting Step 3 (shared/tools.py TDD).
 
 ## Completed Steps
 
 - ✅ Step 1 — Project setup: `pyproject.toml`, `.python-version` (3.13.13), `.gitignore`,
   `data/leads.json`, `langsmith_traces/.gitkeep`, `uv sync` (161 packages, Python 3.13.13)
+- ✅ Step 2 — `shared/leads_store.py`: CRUD on leads.json — 8/8 unit tests passing
 
 ## Context
 
