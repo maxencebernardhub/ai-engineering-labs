@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Step 4 complete. Starting Step 5 (langgraph/agent/state.py).
+Phase 3 in progress — Step 4 complete. Next: Step 5 (langgraph/agent/state.py) then Step 6 (langgraph/agent/agent.py).
 
 ## Completed Steps
 
@@ -11,6 +11,15 @@ Phase 3 in progress — Step 4 complete. Starting Step 5 (langgraph/agent/state.
 - ✅ Step 2 — `shared/leads_store.py`: CRUD on leads.json — 8/8 unit tests passing
 - ✅ Step 3 — `shared/tools.py`: 6 `@tool` decorated functions — 3/3 unit tests passing (11/11 total)
 - ✅ Step 4 — `shared/config.py`: `get_llm()` factory (Anthropic/OpenAI/Google) — 5/5 unit tests passing (16/16 total)
+- 🔲 Step 5 — `langgraph/agent/state.py`: directories created, implementation pending
+- 🔲 Step 6 — `langgraph/agent/agent.py`
+- 🔲 Step 7 — LangGraph integration tests
+- 🔲 Step 8 — `deep_agents/agent/agent.py`
+- 🔲 Step 9 — Deep Agents integration tests
+- 🔲 Step 10 — `app.py` (Streamlit)
+- 🔲 Step 11 — Demo notebooks
+- 🔲 Step 12 — `comparison.ipynb`
+- 🔲 Step 13 — `README.md`
 
 ## Context
 
