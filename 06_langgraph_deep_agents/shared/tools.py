@@ -22,7 +22,10 @@ def list_leads_tool(status_filter: str = "") -> str:
     leads = list_leads(LEADS_PATH, status_filter=status_filter or None)
     if not leads:
         return "No leads found."
-    lines = [f"[{l['id']}] {l['name']} ({l['company']}) — {l['status']}" for l in leads]
+    lines = [
+        f"[{lead['id']}] {lead['name']} ({lead['company']}) — {lead['status']}"
+        for lead in leads
+    ]
     return "\n".join(lines)
 
 
@@ -51,9 +54,11 @@ def update_lead_status_tool(lead_id: str, new_status: str) -> str:
 @tool
 def generate_email_draft_tool(lead_id: str, intent: str) -> str:
     """Generate an email draft for a lead and save it as a JSON file in drafts/.
-    The intent describes the purpose of the email (e.g. 'follow-up', 'initial outreach')."""
+
+    The intent describes the purpose of the email (e.g. 'follow-up', 'outreach').
+    """
     leads = list_leads(LEADS_PATH)
-    lead = next((l for l in leads if l["id"] == lead_id), None)
+    lead = next((item for item in leads if item["id"] == lead_id), None)
     if not lead:
         return f"Lead '{lead_id}' not found."
 

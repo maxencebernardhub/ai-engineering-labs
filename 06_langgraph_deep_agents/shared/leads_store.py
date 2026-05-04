@@ -22,7 +22,7 @@ def _save(path: Path, leads: list[dict]) -> None:
 def list_leads(path: Path, status_filter: str | None = None) -> list[dict]:
     leads = _load(path)
     if status_filter:
-        leads = [l for l in leads if l["status"] == status_filter]
+        leads = [lead for lead in leads if lead["status"] == status_filter]
     return leads
 
 

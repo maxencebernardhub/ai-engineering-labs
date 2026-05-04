@@ -1,4 +1,5 @@
 import pytest
+
 from shared.leads_store import (
     add_lead,
     add_note,
@@ -18,7 +19,7 @@ def test_list_leads_returns_all(leads_file):
 def test_list_leads_filter_by_status(leads_file):
     prospects = list_leads(leads_file, status_filter="prospect")
     assert len(prospects) == 2
-    assert all(l["status"] == "prospect" for l in prospects)
+    assert all(prospect["status"] == "prospect" for prospect in prospects)
 
 
 def test_add_lead_creates_with_defaults(leads_file):

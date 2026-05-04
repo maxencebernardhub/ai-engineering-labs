@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Step 3 complete. Starting Step 4 (shared/config.py TDD).
+Phase 3 in progress — Step 4 complete. Starting Step 5 (langgraph/agent/state.py).
 
 ## Completed Steps
 
@@ -10,6 +10,7 @@ Phase 3 in progress — Step 3 complete. Starting Step 4 (shared/config.py TDD).
   `data/leads.json`, `langsmith_traces/.gitkeep`, `uv sync` (161 packages, Python 3.13.13)
 - ✅ Step 2 — `shared/leads_store.py`: CRUD on leads.json — 8/8 unit tests passing
 - ✅ Step 3 — `shared/tools.py`: 6 `@tool` decorated functions — 3/3 unit tests passing (11/11 total)
+- ✅ Step 4 — `shared/config.py`: `get_llm()` factory (Anthropic/OpenAI/Google) — 5/5 unit tests passing (16/16 total)
 
 ## Context
 
