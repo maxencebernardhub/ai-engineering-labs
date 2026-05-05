@@ -11,7 +11,7 @@ Phase 3 in progress — Steps 5-7 complete. Starting Step 8 (deep_agents/agent/a
 - ✅ Step 2 — `shared/leads_store.py`: CRUD on leads.json — 8/8 unit tests passing
 - ✅ Step 3 — `shared/tools.py`: 6 `@tool` decorated functions — 3/3 unit tests passing (11/11 total)
 - ✅ Step 4 — `shared/config.py`: `get_llm()` factory (Anthropic/OpenAI/Google) — 5/5 unit tests passing (16/16 total)
-- ✅ Step 5 — `langgraph/agent/state.py` + `shared/state.py`: AgentState TypedDict
+- ✅ Step 5 — `langgraph/agent/state.py`: AgentState TypedDict (LangGraph namespace package — no __init__.py needed)
 - ✅ Step 6 — `langgraph/agent/agent.py`: full StateGraph (nodes, HITL, checkpointing)
 - ✅ Step 7 — LangGraph integration tests: 4/4 non-integration passing; 5 @integration ready
 - 🔲 Step 8 — `deep_agents/agent/agent.py`
@@ -122,16 +122,12 @@ LangSmith traces.
 
 ### LangGraph agent
 
-- `langgraph/__init__.py`
-- `langgraph/agent/__init__.py`
 - `langgraph/agent/state.py`
 - `langgraph/agent/agent.py`
 - `langgraph/demo.ipynb`
 
 ### Deep Agents agent
 
-- `deep_agents/__init__.py`
-- `deep_agents/agent/__init__.py`
 - `deep_agents/agent/agent.py`
 - `deep_agents/demo.ipynb`
 
