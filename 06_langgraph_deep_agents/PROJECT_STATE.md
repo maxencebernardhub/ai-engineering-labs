@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Steps 5-7 complete. Starting Step 8 (deep_agents/agent/agent.py).
+Phase 3 in progress — Steps 8-9 complete. Starting Step 10 (app.py Streamlit).
 
 ## Completed Steps
 
@@ -14,8 +14,8 @@ Phase 3 in progress — Steps 5-7 complete. Starting Step 8 (deep_agents/agent/a
 - ✅ Step 5 — `langgraph/agent/state.py`: AgentState TypedDict (LangGraph namespace package — no __init__.py needed)
 - ✅ Step 6 — `langgraph/agent/agent.py`: full StateGraph (nodes, HITL, checkpointing)
 - ✅ Step 7 — LangGraph integration tests: 4/4 non-integration passing; 5 @integration ready
-- 🔲 Step 8 — `deep_agents/agent/agent.py`
-- 🔲 Step 9 — Deep Agents integration tests
+- ✅ Step 8 — `deep_agents/agent/agent.py`: declarative Deep Agents agent (~70 lines vs ~150 for LangGraph)
+- ✅ Step 9 — Deep Agents integration tests: 2/2 non-integration passing; 5 @integration ready
 - 🔲 Step 10 — `app.py` (Streamlit)
 - 🔲 Step 11 — Demo notebooks
 - 🔲 Step 12 — `comparison.ipynb`
