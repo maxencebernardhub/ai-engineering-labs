@@ -187,15 +187,15 @@ LangSmith traces.
 
 ## Risks
 
-1. **Streamlit + LangGraph HITL (high)** — `interrupt()` pauses the graph; Streamlit reruns on
+1. __Streamlit + LangGraph HITL (high)__ — `interrupt()` pauses the graph; Streamlit reruns on
    every interaction. Thread state must survive via `st.session_state`.
    Pattern: store `(thread_id, pending_action)` in session state, re-render HITL buttons
    on each rerun until resolved.
 
-2. **deepagents maturity (medium)** — less documented than LangGraph. HITL mechanism via
+2. __deepagents maturity (medium)__ — less documented than LangGraph. HITL mechanism via
    `interrupt()` needs verification at implementation time.
 
-3. **Integration tests cost (low)** — LLM is mocked in tests. Real API calls reserved for
+3. __Integration tests cost (low)__ — LLM is mocked in tests. Real API calls reserved for
    demo notebooks only.
 
 ---
