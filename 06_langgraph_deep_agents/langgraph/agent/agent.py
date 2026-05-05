@@ -6,8 +6,8 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.types import interrupt
 
+from langgraph.agent.state import AgentState
 from shared.config import get_llm
-from shared.state import AgentState
 from shared.tools import (
     add_lead_tool,
     add_note_tool,

@@ -1,5 +1,11 @@
-# AgentState is defined in shared/state.py (installed package) so it can be
-# imported cleanly by both agents without sys.path tricks.
-from shared.state import AgentState
+from typing import Annotated
 
-__all__ = ["AgentState"]
+from langgraph.graph.message import add_messages
+from typing_extensions import TypedDict
+
+
+class AgentState(TypedDict):
+    messages: Annotated[list, add_messages]
+    # Non-empty when the graph is interrupted waiting for human input.
+    # Holds a description of what the human must confirm or adjust.
+    hitl_pending: str | None
