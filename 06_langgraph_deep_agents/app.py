@@ -93,7 +93,20 @@ def _last_ai_text(agent, config: dict) -> str | None:
         state = agent.get_state(config)
         for msg in reversed(state.values.get("messages", [])):
             if isinstance(msg, AIMessage) and msg.content:
-                return str(msg.content)
+                content = msg.content
+                if isinstance(content, str):
+                    return content
+                # Google Gemini returns a list of blocks: [{"type": "text", "text": "..."}]
+                if isinstance(content, list):
+                    texts = [
+                        block["text"]
+                        for block in content
+                        if isinstance(block, dict)
+                        and block.get("type") == "text"
+                        and block.get("text")
+                    ]
+                    if texts:
+                        return " ".join(texts)
     except Exception:
         pass
     return None
