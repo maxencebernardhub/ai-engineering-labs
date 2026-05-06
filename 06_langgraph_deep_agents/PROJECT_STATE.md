@@ -17,7 +17,7 @@ Phase 3 in progress — Step 10 complete. Starting Step 11 (demo notebooks).
 - ✅ Step 8 — `deep_agents/agent/agent.py`: declarative Deep Agents agent (~70 lines vs ~150 for LangGraph)
 - ✅ Step 9 — Deep Agents integration tests: 2/2 non-integration passing; 5 @integration ready
 - ✅ Step 10 — `app.py`: Streamlit chat UI with agent/provider/model selectors and HITL panel
-- 🔲 Step 11 — Demo notebooks
+- ✅ Step 11 — Demo notebooks: `langgraph/demo.ipynb` and `deep_agents/demo.ipynb` (6 scenarios each, LangSmith tracing)
 - 🔲 Step 12 — `comparison.ipynb`
 - 🔲 Step 13 — `README.md`
 
