@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Step 10 complete. Starting Step 11 (demo notebooks).
+Phase 3 in progress — Step 11 complete. Starting Step 12 (comparison.ipynb).
 
 ## Completed Steps
 

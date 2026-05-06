@@ -4,20 +4,25 @@
     "name": "Alice Moreau",
     "company": "Tech Solutions SAS",
     "email": "a.moreau@techsolutions.fr",
-    "status": "prospect",
-    "notes": ["First contact via website form", "Interested in the Premium plan"],
+    "status": "qualified",
+    "notes": [
+      "First contact via website form",
+      "Interested in the Premium plan"
+    ],
     "created_at": "2026-04-01",
-    "updated_at": "2026-04-01"
+    "updated_at": "2026-05-06"
   },
   {
     "id": "lead_002",
     "name": "Bruno Lefèvre",
     "company": "Dupont & Fils SARL",
     "email": "b.lefevre@dupont-fils.fr",
-    "status": "prospect",
-    "notes": ["Met at Paris trade show"],
+    "status": "lost",
+    "notes": [
+      "Met at Paris trade show"
+    ],
     "created_at": "2026-04-10",
-    "updated_at": "2026-04-10"
+    "updated_at": "2026-05-06"
   },
   {
     "id": "lead_003",
@@ -25,7 +30,11 @@
     "company": "InnovatePro",
     "email": "c.nguyen@innovatepro.fr",
     "status": "qualified",
-    "notes": ["Discovery call done", "Budget confirmed: 15k€/year", "Decision expected end of May"],
+    "notes": [
+      "Discovery call done",
+      "Budget confirmed: 15k€/year",
+      "Decision expected end of May"
+    ],
     "created_at": "2026-03-15",
     "updated_at": "2026-04-20"
   },
@@ -34,10 +43,14 @@
     "name": "David Martin",
     "company": "Groupe Éclat",
     "email": "d.martin@groupe-eclat.com",
-    "status": "qualified",
-    "notes": ["Sent proposal on 2026-04-18", "Follow-up call scheduled for 2026-05-06"],
+    "status": "lost",
+    "notes": [
+      "Sent proposal on 2026-04-18",
+      "Follow-up call scheduled for 2026-05-06",
+      "Prospect said our prices were too high"
+    ],
     "created_at": "2026-03-28",
-    "updated_at": "2026-04-18"
+    "updated_at": "2026-05-05"
   },
   {
     "id": "lead_005",
@@ -45,7 +58,10 @@
     "company": "Meridian Conseil",
     "email": "e.rousseau@meridian-conseil.fr",
     "status": "won",
-    "notes": ["Contract signed 2026-04-02", "Onboarding scheduled for 2026-05-05"],
+    "notes": [
+      "Contract signed 2026-04-02",
+      "Onboarding scheduled for 2026-05-05"
+    ],
     "created_at": "2026-02-10",
     "updated_at": "2026-04-02"
   },
@@ -55,7 +71,10 @@
     "company": "Artisans Réunis",
     "email": "f.petit@artisans-reunis.fr",
     "status": "won",
-    "notes": ["Contract signed 2026-03-20", "Upsell opportunity identified for Q3"],
+    "notes": [
+      "Contract signed 2026-03-20",
+      "Upsell opportunity identified for Q3"
+    ],
     "created_at": "2026-01-25",
     "updated_at": "2026-03-20"
   },
@@ -65,7 +84,10 @@
     "company": "BioNord Industries",
     "email": "g.faure@bionord.fr",
     "status": "lost",
-    "notes": ["Chose competitor after price negotiation", "May reconsider in 6 months"],
+    "notes": [
+      "Chose competitor after price negotiation",
+      "May reconsider in 6 months"
+    ],
     "created_at": "2026-02-05",
     "updated_at": "2026-04-15"
   },
@@ -75,8 +97,92 @@
     "company": "Constructions HB",
     "email": "h.blanc@constructions-hb.fr",
     "status": "lost",
-    "notes": ["Project cancelled due to budget freeze"],
+    "notes": [
+      "Project cancelled due to budget freeze"
+    ],
     "created_at": "2026-03-01",
     "updated_at": "2026-04-28"
+  },
+  {
+    "id": "lead_3979dd",
+    "name": "Adriana Lamford",
+    "company": "Tramadore LTD",
+    "email": "al@tramadore.com",
+    "status": "prospect",
+    "notes": [
+      "She just called one of our representatives to ask for a quote. Seems really interested in our B product."
+    ],
+    "created_at": "2026-05-05",
+    "updated_at": "2026-05-05"
+  },
+  {
+    "id": "lead_84d78b",
+    "name": "Peter Van Der Mirtel",
+    "company": "WaterMarvellous",
+    "email": "peter@watermarvellous.ca",
+    "status": "prospect",
+    "notes": [
+      "Called Peter - meeting scheduled for tomorrow at 2pm",
+      "Peter called back - NOT available tomorrow at 2pm, meeting cancelled"
+    ],
+    "created_at": "2026-05-05",
+    "updated_at": "2026-05-05"
+  },
+  {
+    "id": "lead_3daf87",
+    "name": "Steve Danford",
+    "company": "Microsoft",
+    "email": "steved@microsoft.com",
+    "status": "prospect",
+    "notes": [
+      "Approached during a conference meeting last night."
+    ],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_db4a76",
+    "name": "Unknown Contact (Airport May 2nd)",
+    "company": "Unknown (Airport encounter)",
+    "email": "unknown@example.com",
+    "status": "prospect",
+    "notes": [
+      "Met on May 2nd at an airport. Person overheard me on the phone and expressed interest in our offerings."
+    ],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_abad3a",
+    "name": "Nicolas Garden",
+    "company": "Metalogistics",
+    "email": "ng@metalogistics.ca",
+    "status": "prospect",
+    "notes": [
+      "Met on May 2nd at an airport. Person overheard me on the phone and expressed interest in our offerings.",
+      "User requested all available information about this lead."
+    ],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_6ff136",
+    "name": "Jean Dupont",
+    "company": "StartupX",
+    "email": "j.dupont@startupx.io",
+    "status": "prospect",
+    "notes": [],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_6ec6de",
+    "name": "Jean Dupont",
+    "company": "StartupX",
+    "email": "j.dupont@startupx.io",
+    "status": "prospect",
+    "notes": [],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
   }
 ]

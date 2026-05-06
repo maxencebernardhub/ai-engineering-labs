@@ -23,6 +23,7 @@ dependencies = [
 notebooks = [
     "ipykernel>=7.2.0",
     "jupyterlab>=4.5.7",
+    "grandalf>=0.8",
 ]
 dev = [
     "pytest>=9.0.3",
