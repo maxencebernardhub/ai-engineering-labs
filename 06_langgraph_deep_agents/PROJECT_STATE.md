@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Step 12 complete. Starting Step 13 (README.md).
+✅ Complete — all 13 steps done.
 
 ## Completed Steps
 
@@ -19,7 +19,7 @@ Phase 3 in progress — Step 12 complete. Starting Step 13 (README.md).
 - ✅ Step 10 — `app.py`: Streamlit chat UI with agent/provider/model selectors and HITL panel
 - ✅ Step 11 — Demo notebooks: `langgraph/demo.ipynb` and `deep_agents/demo.ipynb` (6 scenarios each, LangSmith tracing)
 - ✅ Step 12 — `comparison.ipynb`: code metrics, architecture, LangSmith traces, side-by-side test
-- 🔲 Step 13 — `README.md`
+- ✅ Step 13 — `README.md`: setup, architecture, HITL concepts, tools table
 
 ## Context
 
