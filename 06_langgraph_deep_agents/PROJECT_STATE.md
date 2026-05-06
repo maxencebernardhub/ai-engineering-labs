@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 3 in progress — Step 11 complete. Starting Step 12 (comparison.ipynb).
+Phase 3 in progress — Step 12 complete. Starting Step 13 (README.md).
 
 ## Completed Steps
 
@@ -18,7 +18,7 @@ Phase 3 in progress — Step 11 complete. Starting Step 12 (comparison.ipynb).
 - ✅ Step 9 — Deep Agents integration tests: 2/2 non-integration passing; 5 @integration ready
 - ✅ Step 10 — `app.py`: Streamlit chat UI with agent/provider/model selectors and HITL panel
 - ✅ Step 11 — Demo notebooks: `langgraph/demo.ipynb` and `deep_agents/demo.ipynb` (6 scenarios each, LangSmith tracing)
-- 🔲 Step 12 — `comparison.ipynb`
+- ✅ Step 12 — `comparison.ipynb`: code metrics, architecture, LangSmith traces, side-by-side test
 - 🔲 Step 13 — `README.md`
 
 ## Context
