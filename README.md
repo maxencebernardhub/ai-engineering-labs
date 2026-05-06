@@ -20,7 +20,7 @@ to more advanced, production-oriented patterns.
 | [`03_google_ai/`](03_google_ai/) | Google Gemini | Text generation · Multimodal (Images, Audio, Video) · Long context (2M tokens) · Structured outputs · Function calling · Code execution · Model-as-a-Judge · Multimodal Live API · Context Caching · Batch API · Controlled generation (Thinking mode, Hinting) | Notebooks + Scripts | ✅ Available |
 | [`04_multi_provider/`](04_multi_provider/) | Cross-provider | Unified async interface · Smart routing · Automatic fallback · Cost tracking · Structured output · Streaming | Python package + Notebook | ✅ Available |
 | [`05_rag_langchain/`](05_rag_langchain/) | LangChain | Embeddings · Chunking strategies · ChromaDB · Query expansion · CrossEncoder reranking · LCEL chains · RAGAS evaluation | Notebooks + Streamlit app | ✅ Available |
-| `06_agents_langgraph/` | LangGraph | ReAct agents · Multi-agent workflows · Human-in-the-loop · Stateful graphs · Tool orchestration · Agent memory | Notebooks + Scripts | 🔵 Planned |
+| [`06_langgraph_deep_agents/`](06_langgraph_deep_agents/) | LangGraph + Deep Agents | Commercial assistant agent · LangGraph `StateGraph` · Human-in-the-loop · Checkpointing · Deep Agents declarative API · HITL comparison · Streamlit multi-agent app · LangSmith tracing | Notebooks + Streamlit app | ✅ Available |
 | `07_local_models_llamaindex/` | LlamaIndex + Ollama | Local LLM inference · Offline RAG · Index types · Query engines · Custom retrievers | Notebooks + Scripts | 🔵 Planned |
 | `08_fastapi_backend/` | FastAPI | REST API for AI endpoints · Streaming responses · Auth patterns · Background tasks · OpenAPI schema | Scripts + App | 🔵 Planned |
 | `09_docker_deploy/` | Docker | Containerising AI apps · Multi-stage builds · Compose for local stacks · Environment management · Health checks | Config + Scripts | 🔵 Planned |
@@ -83,6 +83,16 @@ to more advanced, production-oriented patterns.
 | [`05_rag_langchain/04_rag_evaluation.ipynb`](05_rag_langchain/04_rag_evaluation.ipynb) | RAGAS evaluation: Faithfulness, Answer Relevancy, Context Precision/Recall |
 | [`05_rag_langchain/app/app.py`](05_rag_langchain/app/app.py) | Streamlit app: upload documents, select LLM provider, ask questions |
 
+### `06_langgraph_deep_agents/` — LangGraph vs Deep Agents
+
+| Resource | Description |
+| -------- | ----------- |
+| [`06_langgraph_deep_agents/README.md`](06_langgraph_deep_agents/README.md) | Setup, architecture, HITL patterns, tools table |
+| [`06_langgraph_deep_agents/app.py`](06_langgraph_deep_agents/app.py) | Shared Streamlit app: agent/provider/model selectors, HITL panel |
+| [`06_langgraph_deep_agents/langgraph/demo.ipynb`](06_langgraph_deep_agents/langgraph/demo.ipynb) | LangGraph agent: 6 scenarios with explicit `StateGraph` |
+| [`06_langgraph_deep_agents/deep_agents/demo.ipynb`](06_langgraph_deep_agents/deep_agents/demo.ipynb) | Deep Agents: same 6 scenarios, declarative `create_deep_agent()` |
+| [`06_langgraph_deep_agents/comparison.ipynb`](06_langgraph_deep_agents/comparison.ipynb) | Side-by-side analysis: code metrics, LangSmith traces, behavioral test |
+
 ---
 
 ## Getting Started
@@ -114,8 +124,14 @@ ANTHROPIC_API_KEY=your_anthropic_api_key_here
 # Google AI (Gemini)
 GEMINI_API_KEY=your_gemini_api_key_here
 
+# Google AI (used in lab 06)
+GOOGLE_API_KEY=your_google_api_key_here
+
 # VoyageAI (used for embeddings in Anthropic labs)
 VOYAGE_API_KEY=your_voyageai_api_key_here
+
+# LangSmith (used in lab 06 for agent tracing)
+LANGSMITH_API_KEY=your_langsmith_api_key_here
 ```
 
 ---
