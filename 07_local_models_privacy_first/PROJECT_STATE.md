@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: Implementation — Step 7 in progress
+**Phase**: Implementation — Step 8 in progress
 **Branch**: `feat/07-local-models-privacy-first`
 **Last updated**: 2026-05-13
 
@@ -99,8 +99,8 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 | 4 | `01_ollama_setup.ipynb` — Ollama API, model management, streaming | `done` |
 | 5 | `02_advanced_capabilities.ipynb` — Pydantic structured outputs + streaming | `done` |
 | 6 | `03_tool_calling.ipynb` — 3 tools × 3 scenarios × 3 local models | `done` |
-| 7 | `04_vision.ipynb` — multimodal with gemma4:e4b, all 3 vision assets | `in progress` |
-| 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `pending` |
+| 7 | `04_vision.ipynb` — multimodal with gemma4:e4b, all 3 vision assets | `done` |
+| 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `in progress` |
 | 9 | `06_benchmark.ipynb` — 6-model benchmark via LiteLLM, DataFrame + visualizations | `pending` |
 | 10 | Streamlit app: `app/app.py` + `app/chat.py` | `pending` |
 | 11 | `README.md` — architecture diagram, setup instructions, screenshots | `pending` |
