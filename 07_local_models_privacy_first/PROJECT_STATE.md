@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: Implementation — Step 4 in progress
+**Phase**: Implementation — Step 5 in progress
 **Branch**: `feat/07-local-models-privacy-first`
 **Last updated**: 2026-05-13
 
@@ -96,8 +96,8 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 | 1 | Project scaffolding: `pyproject.toml`, `.python-version`, `uv sync` | `done` |
 | 2 | Synthetic data: `contoso_report_q4_2024.md` + generate 3 vision assets | `done` |
 | 3 | TDD — `utils/helpers.py` + `app/chat.py` + all unit and integration tests | `done` |
-| 4 | `01_ollama_setup.ipynb` — Ollama API, model management, streaming | `in progress` |
-| 5 | `02_advanced_capabilities.ipynb` — Pydantic structured outputs + streaming | `pending` |
+| 4 | `01_ollama_setup.ipynb` — Ollama API, model management, streaming | `done` |
+| 5 | `02_advanced_capabilities.ipynb` — Pydantic structured outputs + streaming | `in progress` |
 | 6 | `03_tool_calling.ipynb` — 3 tools × 3 scenarios × 3 local models | `pending` |
 | 7 | `04_vision.ipynb` — multimodal with gemma4:e4b, all 3 vision assets | `pending` |
 | 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `pending` |
