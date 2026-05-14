@@ -2,9 +2,9 @@
 
 ## Current Status
 
-**Phase**: Implementation — Step 9 in progress
+**Phase**: Implementation — Step 10 in progress
 **Branch**: `feat/07-local-models-privacy-first`
-**Last updated**: 2026-05-14
+**Last updated**: 2026-05-14 (step 9 done)
 
 ---
 
@@ -101,8 +101,8 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 | 6 | `03_tool_calling.ipynb` — 3 tools × 3 scenarios × 3 local models | `done` |
 | 7 | `04_vision.ipynb` — multimodal with gemma4:e4b, all 3 vision assets | `done` |
 | 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `done` |
-| 9 | `06_benchmark.ipynb` — 6-model benchmark via LiteLLM, DataFrame + visualizations | `in progress` |
-| 10 | Streamlit app: `app/app.py` + `app/chat.py` | `pending` |
+| 9 | `06_benchmark.ipynb` — 6-model benchmark via LiteLLM, DataFrame + visualizations | `done` |
+| 10 | Streamlit app: `app/app.py` + `app/chat.py` | `in progress` |
 | 11 | `README.md` — architecture diagram, setup instructions, screenshots | `pending` |
 | 12 | Root `README.md` — update lab 07 row to `✅ Available` | `pending` |
 
