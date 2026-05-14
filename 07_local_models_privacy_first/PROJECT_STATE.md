@@ -2,9 +2,9 @@
 
 ## Current Status
 
-**Phase**: Implementation — Step 10 in progress
+**Phase**: Implementation — Step 11 in progress
 **Branch**: `feat/07-local-models-privacy-first`
-**Last updated**: 2026-05-14 (step 9 done)
+**Last updated**: 2026-05-14
 
 ---
 
@@ -28,7 +28,12 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 ├── pyproject.toml
 ├── .python-version
 ├── PROJECT_STATE.md
-├── docs/specs/2026-05-12-07-local-models-privacy-first.md
+├── docs/
+│   ├── specs/2026-05-12-07-local-models-privacy-first.md
+│   └── assets/
+│       ├── app_mistral-7b.png              # Streamlit app screenshot — mistral:7b
+│       ├── app_qwen3-5-9b.png              # Streamlit app screenshot — qwen3.5:9b
+│       └── app_gemma4-e4b.png              # Streamlit app screenshot — gemma4:e4b
 ├── data/
 │   ├── contoso_report_q4_2024.md        # Fake confidential HR/financial report
 │   ├── generate_vision_assets.py         # Script to generate vision images with matplotlib
@@ -102,8 +107,8 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 | 7 | `04_vision.ipynb` — multimodal with gemma4:e4b, all 3 vision assets | `done` |
 | 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `done` |
 | 9 | `06_benchmark.ipynb` — 6-model benchmark via LiteLLM, DataFrame + visualizations | `done` |
-| 10 | Streamlit app: `app/app.py` + `app/chat.py` | `in progress` |
-| 11 | `README.md` — architecture diagram, setup instructions, screenshots | `pending` |
+| 10 | Streamlit app: `app/app.py` + `app/chat.py` | `done` |
+| 11 | `README.md` — architecture diagram, setup instructions, screenshots | `in progress` |
 | 12 | Root `README.md` — update lab 07 row to `✅ Available` | `pending` |
 
 ---
