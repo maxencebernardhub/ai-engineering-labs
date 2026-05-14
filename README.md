@@ -21,7 +21,7 @@ to more advanced, production-oriented patterns.
 | [`04_multi_provider/`](04_multi_provider/) | Cross-provider | Unified async interface · Smart routing · Automatic fallback · Cost tracking · Structured output · Streaming | Python package + Notebook | ✅ Available |
 | [`05_rag_langchain/`](05_rag_langchain/) | LangChain | Embeddings · Chunking strategies · ChromaDB · Query expansion · CrossEncoder reranking · LCEL chains · RAGAS evaluation | Notebooks + Streamlit app | ✅ Available |
 | [`06_langgraph_deep_agents/`](06_langgraph_deep_agents/) | LangGraph + Deep Agents | Commercial assistant agent · LangGraph `StateGraph` · Human-in-the-loop · Checkpointing · Deep Agents declarative API · HITL comparison · Streamlit multi-agent app · LangSmith tracing | Notebooks + Streamlit app | ✅ Available |
-| `07_local_models_llamaindex/` | LlamaIndex + Ollama | Local LLM inference · Offline RAG · Index types · Query engines · Custom retrievers | Notebooks + Scripts | 🔵 Planned |
+| [`07_local_models_privacy_first/`](07_local_models_privacy_first/) | Ollama + LiteLLM | Local inference · Structured outputs · Tool calling · Vision · Offline RAG (FAISS) · 6-model benchmark (local vs cloud) · Privacy-first architecture · Streamlit chat app | Notebooks + Streamlit app | ✅ Available |
 | `08_fastapi_backend/` | FastAPI | REST API for AI endpoints · Streaming responses · Auth patterns · Background tasks · OpenAPI schema | Scripts + App | 🔵 Planned |
 | `09_docker_deploy/` | Docker | Containerising AI apps · Multi-stage builds · Compose for local stacks · Environment management · Health checks | Config + Scripts | 🔵 Planned |
 
@@ -92,6 +92,16 @@ to more advanced, production-oriented patterns.
 | [`06_langgraph_deep_agents/langgraph/demo.ipynb`](06_langgraph_deep_agents/langgraph/demo.ipynb) | LangGraph agent: 6 scenarios with explicit `StateGraph` |
 | [`06_langgraph_deep_agents/deep_agents/demo.ipynb`](06_langgraph_deep_agents/deep_agents/demo.ipynb) | Deep Agents: same 6 scenarios, declarative `create_deep_agent()` |
 | [`06_langgraph_deep_agents/comparison.ipynb`](06_langgraph_deep_agents/comparison.ipynb) | Side-by-side analysis: code metrics, LangSmith traces, behavioral test |
+
+### `07_local_models_privacy_first/` — Local Models & Privacy-First AI
+
+| Resource | Description |
+| --- | --- |
+| [`07_local_models_privacy_first/README.md`](07_local_models_privacy_first/README.md) | Architecture, setup, `ollama pull` commands, benchmark results |
+| [`07_local_models_privacy_first/app/app.py`](07_local_models_privacy_first/app/app.py) | Streamlit chat app — model selector, live streaming, TTFT + tok/s stats |
+| [`07_local_models_privacy_first/01_ollama_setup.ipynb`](07_local_models_privacy_first/01_ollama_setup.ipynb) | Ollama SDK basics: model management, streaming, OpenAI-compatible endpoint |
+| [`07_local_models_privacy_first/05_local_rag.ipynb`](07_local_models_privacy_first/05_local_rag.ipynb) | Full offline RAG: FAISS + `qwen3-embedding:0.6b` + `mistral:7b` — 5/5 accuracy |
+| [`07_local_models_privacy_first/06_benchmark.ipynb`](07_local_models_privacy_first/06_benchmark.ipynb) | 6-model benchmark via LiteLLM — performance, quality, economics, data sovereignty |
 
 ---
 
