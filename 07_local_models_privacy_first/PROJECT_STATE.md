@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Phase**: Implementation — Step 11 in progress
+**Phase**: Complete
 **Branch**: `feat/07-local-models-privacy-first`
 **Last updated**: 2026-05-14
 
@@ -108,8 +108,8 @@ quantifies the tradeoffs vs cloud providers through a rigorous 4-dimension bench
 | 8 | `05_local_rag.ipynb` — full offline RAG: FAISS + qwen3-embedding + Ollama LLM | `done` |
 | 9 | `06_benchmark.ipynb` — 6-model benchmark via LiteLLM, DataFrame + visualizations | `done` |
 | 10 | Streamlit app: `app/app.py` + `app/chat.py` | `done` |
-| 11 | `README.md` — architecture diagram, setup instructions, screenshots | `in progress` |
-| 12 | Root `README.md` — update lab 07 row to `✅ Available` | `pending` |
+| 11 | `README.md` — architecture diagram, setup instructions, screenshots | `done` |
+| 12 | Root `README.md` — update lab 07 row to `✅ Available` | `done` |
 
 ---
 
