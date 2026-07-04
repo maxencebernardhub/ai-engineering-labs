@@ -1,0 +1,106 @@
+[
+  {
+    "id": "lead_001",
+    "name": "Alice Moreau",
+    "company": "Tech Solutions SAS",
+    "email": "a.moreau@techsolutions.fr",
+    "status": "qualified",
+    "notes": [
+      "First contact via website form",
+      "Interested in the Premium plan"
+    ],
+    "created_at": "2026-04-01",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_002",
+    "name": "Bruno Lefevre",
+    "company": "Dupont & Fils SARL",
+    "email": "b.lefevre@dupont-fils.fr",
+    "status": "lost",
+    "notes": [
+      "Met at Paris trade show",
+      "Chose a competitor on price"
+    ],
+    "created_at": "2026-04-10",
+    "updated_at": "2026-05-06"
+  },
+  {
+    "id": "lead_003",
+    "name": "Clara Nguyen",
+    "company": "InnovatePro",
+    "email": "c.nguyen@innovatepro.fr",
+    "status": "qualified",
+    "notes": [
+      "Discovery call done",
+      "Budget confirmed: 15k EUR/year",
+      "Decision expected end of May"
+    ],
+    "created_at": "2026-03-15",
+    "updated_at": "2026-04-20"
+  },
+  {
+    "id": "lead_004",
+    "name": "Emilie Rousseau",
+    "company": "Meridian Conseil",
+    "email": "e.rousseau@meridian-conseil.fr",
+    "status": "won",
+    "notes": [
+      "Contract signed 2026-04-02",
+      "Onboarding scheduled for 2026-05-05"
+    ],
+    "created_at": "2026-02-10",
+    "updated_at": "2026-04-02"
+  },
+  {
+    "id": "lead_005",
+    "name": "Francois Petit",
+    "company": "Artisans Reunis",
+    "email": "f.petit@artisans-reunis.fr",
+    "status": "won",
+    "notes": [
+      "Contract signed 2026-03-20",
+      "Upsell opportunity identified for Q3"
+    ],
+    "created_at": "2026-01-25",
+    "updated_at": "2026-03-20"
+  },
+  {
+    "id": "lead_006",
+    "name": "Geraldine Faure",
+    "company": "BioNord Industries",
+    "email": "g.faure@bionord.fr",
+    "status": "lost",
+    "notes": [
+      "Chose competitor after price negotiation",
+      "May reconsider in 6 months"
+    ],
+    "created_at": "2026-02-05",
+    "updated_at": "2026-04-15"
+  },
+  {
+    "id": "lead_007",
+    "name": "Adriana Lamford",
+    "company": "Tramadore LTD",
+    "email": "al@tramadore.com",
+    "status": "prospect",
+    "notes": [
+      "Called one of our representatives to ask for a quote",
+      "Seems really interested in our B product"
+    ],
+    "created_at": "2026-05-05",
+    "updated_at": "2026-05-05"
+  },
+  {
+    "id": "lead_008",
+    "name": "Steve Danford",
+    "company": "Northwind Systems",
+    "email": "s.danford@northwind-systems.com",
+    "status": "prospect",
+    "notes": [
+      "Approached during a conference last night"
+    ],
+    "created_at": "2026-05-06",
+    "updated_at": "2026-05-06"
+  }
+]

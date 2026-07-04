@@ -2,8 +2,8 @@
 
 ## Status
 
-🔵 Planning — Feature Brief + Implementation Plan locked (Phases 1–2 done). Implementation not
-started.
+🟢 Phase 4 (TDD implementation) — in progress. **Step 0 (scaffolding) done.** Next: Step 1
+(domain + storage layer, TDD).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -18,6 +18,15 @@ Branch: `feat/08-fastapi-docker-aws`
   `docs/specs/2026-07-03-08-fastapi-docker-aws-implementation-plan.md`
 - ✅ ADR checkpoint — skipped; the "Lambda Web Adapter vs Mangum" rationale is folded into the
   Implementation Plan ("Design rationale" section).
+- ✅ Phase 4 · **Step 0 — Scaffolding** (implementation started):
+  - `pyproject.toml`, `.python-version` (3.13), lab-level `.gitignore`, `.dockerignore`.
+  - `data/seed_leads.json` — **8 fictitious leads**, balanced spread
+    (2 prospect / 2 qualified / 2 won / 2 lost), sequential ids, ASCII-only
+    (accents/`€` removed for cross-backend safety; no real companies).
+  - All runtime + dev deps added via `uv add` (latest stable `>=`, pinned in `uv.lock`);
+    `pytest-asyncio` included for the async `astream` tests (Step 4).
+  - Verified green: `uv sync`, heavy-import sanity check, `ruff check`, `ruff format --check`,
+    `pytest` (0 tests yet — expected).
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
@@ -98,6 +107,9 @@ deployment & validation · **12** CI workflow.
 - **No mypy** — Pydantic (runtime validation at the API boundary) + Ruff (lint) suffice;
   consistent with the other labs.
 - Dependency versions: `>=` latest stable resolved via `uv add`, pinned in `uv.lock`.
+- **uv packaging = non-package** (`[tool.uv] package = false`, `pytest pythonpath = ["."]`):
+  `app` is a deployable service, not an installable library — no build-system, no editable
+  install, simpler Dockerfile. (Differs from lab 06, which packaged a shared `shared/` module.)
 - Agent core copied & adapted from lab 06 — lab 06 left intact, no cross-lab import.
 - No lab-level `.env` — local keys from repo-root `.env` (as other labs).
 - Python >= 3.13; `uv`; Ruff (line length 88); pytest.

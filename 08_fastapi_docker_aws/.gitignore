@@ -1,0 +1,7 @@
+# Lab-local runtime artifacts (the repo-root .gitignore already covers
+# .env, .venv/, __pycache__/, and the *_cache/ dirs for the whole repo).
+
+# Local SQLite databases created by the Postgres store parity tests / local runs
+*.db
+*.sqlite
+*.sqlite3
