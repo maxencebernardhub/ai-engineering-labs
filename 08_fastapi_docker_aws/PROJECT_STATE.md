@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–1 done.** Next: Step 2
-(config + BYOK key resolution, TDD).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–2 done.** Next: Step 3
+(agent tools bound to a store, TDD).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -39,6 +39,29 @@ Branch: `feat/08-fastapi-docker-aws`
     idempotent); tests start empty.
   - `tests/test_storage.py` — 8-test contract suite parametrized over memory / SQLite / moto-S3,
     plus domain + factory + seed tests. **42 passed**, `ruff check` + `ruff format --check` clean.
+  - ⚠️ **Cross-step contract for Step 2**: `get_store(settings)` (in `app/storage/__init__.py`)
+    reads three attributes off `settings` via duck-typing (`typing.Protocol`): **`lead_store`**
+    (`"memory"` | `"postgres"` | `"s3"`), **`database_url`** (`str | None`, required when
+    `postgres`), **`leads_bucket`** (`str | None`, required when `s3`). The `Settings`
+    (pydantic-settings) object built in Step 2 **must expose exactly these three attribute
+    names** so it plugs into the factory unchanged.
+- ✅ Phase 4 · **Step 2 — Config + BYOK key resolution** (TDD):
+  - `app/config.py` — `Settings` (pydantic-settings, loads repo-root `../.env`, `extra="ignore"`)
+    exposing the three storage attrs (satisfies the Step 1 contract) + `api_auth_token` +
+    server-side keys. Google key accepts `GOOGLE_API_KEY`/`GEMINI_API_KEY` via `AliasChoices`
+    (the shared `.env` uses `GEMINI_API_KEY`). `get_settings()` cached with `lru_cache`.
+  - `resolve_api_key(header, provider, settings)` — single path header > env > `401`
+    (`fastapi.HTTPException`); blank header and empty env value both treated as absent.
+  - `get_llm(provider, model, api_key)` — BYOK key injected via the `api_key` alias (all three
+    LangChain classes accept it); lazy per-provider imports; unknown provider → `ValueError`.
+  - `SUPPORTED_PROVIDERS` / `DEFAULT_MODELS` / `PROVIDER_MODELS` — **model IDs refreshed &
+    validated with the user (July 2026)**: defaults `claude-sonnet-5` / `gpt-5.4` /
+    `gemini-3.1-flash-lite`; dropdown lists in `PROVIDER_MODELS`.
+  - `tests/test_config.py` — 11 tests (precedence, GEMINI alias, empty-value handling, BYOK
+    injection per provider, unknown provider, provider/model maps, storage-attr contract).
+    **53 passed** total; `ruff check` + `ruff format --check` clean.
+  - ⚠️ **Cross-step note for Step 5/6**: `resolve_api_key` raises `HTTPException(401)` directly
+    (config coupled to FastAPI, per plan) — reuse it from `security.py`, don't re-map.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
