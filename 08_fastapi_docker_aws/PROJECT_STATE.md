@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–3 done.** Next: Step 4
-(agents: stateless LangGraph + Deep Agents builders and the runner).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–4 done.** Next: Step 5
+(schemas + security).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -82,6 +82,32 @@ Branch: `feat/08-fastapi-docker-aws`
   - ⚠️ **Cross-step contract for Step 4**: `generate_email_draft` surfaces the draft only as the
     ToolMessage `artifact` (its `content` is a short summary string). The runner must read
     `email_draft` from the tool message's `.artifact`, not parse the content.
+- ✅ Phase 4 · **Step 4 — Agents (stateless, autonomous) + runner** (TDD):
+  - `app/agents/langgraph_agent.py` — `build_langgraph_agent(llm, tools)` compiles the lab-06
+    StateGraph **stripped of HITL and the checkpointer**: `agent`→`tools` nodes, conditional
+    `agent→tools/end`, loop back through `agent`. LLM + tools are injected (BYOK-ready). Holds
+    the shared `SYSTEM_PROMPT`.
+  - `app/agents/deep_agent.py` — `build_deep_agent(model_or_string, tools)` =
+    `create_deep_agent(..., interrupt_on={})` (autonomous, no checkpointer), same prompt/tools.
+  - **Risk 1 resolved**: `create_deep_agent` accepts a `BaseChatModel` instance (verified,
+    deepagents 0.6.12), so the Deep Agents path is unit-tested with the fake — **no
+    `@integration` needed**.
+  - `app/agents/runner.py` — `run(engine, llm, store, messages)` + async `astream(...)`; shared
+    `_parse` flattens the message list into `reply`, `tool_calls` (`{name, args, result}` — the
+    tool's output string is surfaced so the frontend can render an actions trace),
+    `leads_touched`, `email_draft` (read from the ToolMessage **`.artifact`**), `usage`
+    (`input/output/total` tokens). `leads_touched` from write-tool call args, plus the created
+    id recovered from the `add_lead` result. `astream` yields `{"type":"token"}` deltas then a
+    final `{"type":"final", ...}` (same shape as `run`) via `stream_mode=["messages","values"]`.
+  - `tests/test_agents.py` — custom `FakeToolCallingModel` (implements `bind_tools`, `_generate`
+    **and** `_stream`; repeats its last scripted response so Deep Agents' variable call count is
+    safe). Covers list/add/guardrail intents, email-draft parsing, streaming (tokens+final),
+    unknown-engine, and the Deep Agents smoke test. **72 passed** total; `ruff check` + `ruff
+    format --check` clean.
+  - ⚠️ **Cross-step contract for Steps 5/6**: the runner's structured dict is the source of
+    truth for the `InvokeResponse` schema — `reply: str`, `tool_calls: [{name, args, result}]`,
+    `leads_touched: [str]`, `email_draft: dict | None`, `usage: {input_tokens, output_tokens,
+    total_tokens}`. SSE `/invoke/stream` consumes `astream`'s `token`/`final` events verbatim.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
