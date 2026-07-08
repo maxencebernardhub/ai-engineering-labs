@@ -45,7 +45,7 @@ DEFAULT_MODELS: dict[str, str] = {
 PROVIDER_MODELS: dict[str, list[str]] = {
     "anthropic": ["claude-opus-4-8", "claude-sonnet-5", "claude-haiku-4-5"],
     "openai": ["gpt-5.5", "gpt-5.4", "gpt-5.4-mini"],
-    "google": ["gemini-3.5-flash", "gemini-3-flash", "gemini-3.1-flash-lite"],
+    "google": ["gemini-3.5-flash", "gemini-3-flash-preview", "gemini-3.1-flash-lite"],
 }
 
 # provider -> the `Settings` attribute holding its server-side key.
@@ -95,6 +95,24 @@ def get_settings() -> Settings:
     return Settings()
 
 
+def _server_key_value(provider: str, settings: Settings) -> str | None:
+    """The configured server-side key for `provider`, or `None` if unset/empty."""
+    attr = _ENV_KEY_ATTR.get(provider)
+    secret = getattr(settings, attr) if attr else None
+    value = secret.get_secret_value() if secret else None
+    return value or None
+
+
+def has_server_key(provider: str, settings: Settings) -> bool:
+    """Whether a server-side key is configured for `provider`.
+
+    Drives `/models`' `server_keys` flag so the frontend knows if a BYOK key is
+    required for that provider (True locally where keys exist, False in the cloud
+    where BYOK is enforced).
+    """
+    return _server_key_value(provider, settings) is not None
+
+
 def resolve_api_key(header_key: str | None, provider: str, settings: Settings) -> str:
     """Resolve the LLM key: request header > server-side env key > `401`.
 
@@ -104,9 +122,7 @@ def resolve_api_key(header_key: str | None, provider: str, settings: Settings) -
     if header_key and header_key.strip():
         return header_key
 
-    attr = _ENV_KEY_ATTR.get(provider)
-    secret = getattr(settings, attr) if attr else None
-    value = secret.get_secret_value() if secret else None
+    value = _server_key_value(provider, settings)
     if value:
         return value
 
@@ -131,9 +147,11 @@ def get_llm(provider: str, model: str | None, api_key: str) -> BaseChatModel:
     model = model or DEFAULT_MODELS[provider]
 
     if provider == "anthropic":
-        from langchain_anthropic import ChatAnthropic
+        # Subclass, not stock ChatAnthropic: keeps streamed extended-thinking
+        # blocks replayable across tool-loop turns (see app.anthropic_compat).
+        from app.anthropic_compat import ThinkingSafeChatAnthropic
 
-        return ChatAnthropic(model=model, api_key=api_key)
+        return ThinkingSafeChatAnthropic(model=model, api_key=api_key)
 
     if provider == "openai":
         from langchain_openai import ChatOpenAI

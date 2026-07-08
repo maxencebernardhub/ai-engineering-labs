@@ -96,6 +96,44 @@ def test_get_llm_unknown_provider_raises():
         get_llm("mistral", None, "sk-injected")
 
 
+def test_anthropic_backfills_omitted_thinking_block():
+    """A signature-only `thinking` block must get an empty `thinking` field.
+
+    Streamed adaptive/`omitted` thinking yields blocks with only a signature;
+    replaying them on a tool-loop turn is otherwise rejected by Anthropic with
+    `thinking.thinking: Field required`. `get_llm` returns the shim that repairs
+    the outgoing payload (checked offline — `_get_request_payload` makes no call).
+    """
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.anthropic_compat import ThinkingSafeChatAnthropic
+
+    llm = get_llm("anthropic", "claude-sonnet-5", "sk-injected")
+    assert isinstance(llm, ThinkingSafeChatAnthropic)
+
+    messages = [
+        HumanMessage(content="list my leads"),
+        AIMessage(  # a prior streamed assistant turn: signature-only thinking
+            content=[
+                {"type": "thinking", "signature": "sig-abc"},
+                {"type": "text", "text": "Here you go."},
+            ]
+        ),
+        HumanMessage(content="thanks"),
+    ]
+    payload = llm._get_request_payload(messages)
+
+    thinking_blocks = [
+        block
+        for message in payload["messages"]
+        if isinstance(message.get("content"), list)
+        for block in message["content"]
+        if isinstance(block, dict) and block.get("type") == "thinking"
+    ]
+    assert thinking_blocks, "expected the thinking block to survive formatting"
+    assert all(block.get("thinking") == "" for block in thinking_blocks)
+
+
 # --------------------------------------------------------------------------- #
 # Provider / model maps
 # --------------------------------------------------------------------------- #

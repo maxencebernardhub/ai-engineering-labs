@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–5 done.** Next: Step 6
-(FastAPI app).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–6 done.** Next: Step 7
+(frontend).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -134,6 +134,88 @@ Branch: `feat/08-fastapi-docker-aws`
     `configure_security(app, settings)` at app-factory time. `/models` fills `ModelsResponse`
     with `PROVIDER_MODELS`, `DEFAULT_MODELS`, and a per-provider `server_keys` flag derived from
     the configured server-side keys.
+
+- ✅ Phase 4 · **Step 6 — FastAPI app** (TDD, integration):
+  - `app/main.py` — `create_app(settings=None)` factory: `configure_security(app, settings)`,
+    `get_store(settings)` + `store.seed_if_empty(_load_seed())` at boot (8 demo leads), store on
+    `app.state.store`; `app.include_router(router)`; defensive `StaticFiles` mount at `/` (only
+    when `frontend/` exists — absent until Step 7). Module-level `app = create_app()` is the
+    ASGI entry point (`app.main:app`).
+  - Routes: `GET /health` → `{"status":"ok"}` (never throttled); `GET /models` (fills
+    `ModelsResponse`; `server_keys` via new `config.has_server_key`); `POST /invoke`
+    (`runner.run` → `InvokeResponse`); `POST /invoke/stream` (SSE via `sse-starlette`
+    `EventSourceResponse`, consumes `runner.astream` verbatim as `data: <json>`); `GET /leads`
+    (+ `?status=`). `/invoke*` carry `@limiter.limit(RATE_LIMIT)` + `Depends(require_auth)`; BYOK
+    resolved via `resolve_api_key(get_api_key(...), provider, settings)`. Error mapping:
+    missing key → 401, bad engine/provider/model → 422, LLM/provider failure → `_provider_error`
+    (504 on timeout, else 502; SSE emits an `error` event since status is already sent).
+  - **Design seams (test overrides)**: `get_lead_store` (reads `request.app.state.store`) and
+    `get_llm_factory` (returns `config.get_llm`); tests swap them via `app.dependency_overrides`.
+  - ⚠️ **slowapi gotcha (fixed)**: the module-level `limiter` records **one limit per decorated
+    endpoint the first time it's seen**. Defining the routes *inside* the app factory re-ran the
+    `@limiter.limit` decorator on every `create_app`, stacking duplicate limits on the same
+    endpoint key (`app.main.invoke`) → each request cost N hits, silently shrinking the cap
+    (surfaced as a flaky 429 in tests). Fix: routes live on a **module-level `APIRouter`**
+    decorated once at import; `create_app` only `include_router`s. Keep it this way.
+  - `config.py` touch: added `has_server_key(provider, settings)` + shared `_server_key_value`
+    helper (refactored `resolve_api_key` onto it) — drives `/models`' `server_keys` flag without
+    abusing the 401 exception.
+  - `tests/conftest.py` — `client_factory` fixture (builds a `TestClient` over `create_app`,
+    swaps the two seams + `get_settings`; keyless `make_settings` via init kwargs so ambient env
+    keys can't leak in), reuses `FakeToolCallingModel`/`fake_llm`/`_tool_call` from
+    `test_agents`; autouse `_reset_rate_limiter` clears the shared limiter's counters around
+    every test (the limiter stays **enabled** so the 429 test is real).
+  - `tests/test_api.py` — the 9 matrix tests (health, models+key flag, invoke reply/persist, SSE,
+    leads+filter, 401, 422, 429). **97 passed** total; `ruff check` + `ruff format --check` clean.
+    Verified the real module-level app boots against the repo-root `.env` (health/models/leads,
+    all 5 OpenAPI paths).
+  - ⚠️ **Cross-step contract for Step 7 (frontend)**: drop the bundle in `frontend/` (served at
+    `/` automatically once present). SSE frames are `data: {"type":"token","content":...}` then
+    `data: {"type":"final", ...<InvokeResponse fields>}`; `GET /models` returns `providers`,
+    `default_models`, `server_keys` (per-provider bool → whether the BYOK field is required).
+    BYOK key goes in the `X-LLM-API-Key` header. ⚠️ **For Step 8 (Docker)**: ASGI entry point is
+    `app.main:app`.
+
+- ✅ Phase 4 · **Step 6.1 — Anthropic streaming-thinking fix** (found during manual live testing):
+  - **Symptom**: `POST /invoke/stream` failed on any **tool-using** run with the default
+    Anthropic model — Anthropic `400 messages.N.content.0.thinking.thinking: Field required`,
+    surfaced (correctly) as an SSE `error` event. Sync `/invoke` was unaffected.
+  - **Root cause** (traced into `langchain-anthropic` 1.4.8, the latest): recent Claude models
+    use *adaptive* extended thinking whose reasoning text defaults to `display: "omitted"`, so
+    the API returns a `thinking` block with a **signature but no text**. The streaming path
+    rebuilds that block from a lone `signature_delta` → aggregated block has only
+    `type`+`signature`; the outgoing formatter (`_format_messages`, keys
+    `type/thinking/cache_control/signature`) then serializes it **without** the required
+    `thinking` field. Replaying it on the next tool-loop turn is rejected. The non-streaming
+    path keeps an empty `thinking` key, which is why sync worked.
+  - **Scope (measured live)**: streaming only, tool-loop turns only; **both** engines (langgraph +
+    deep_agents); **Anthropic only** (OpenAI `gpt-5.4` + Google `gemini-3.1-flash-lite` fine);
+    among Anthropic models **only `claude-sonnet-5`** (our default) — `claude-opus-4-8` streams
+    thinking text, `claude-haiku-4-5` doesn't think. No documented API/param workaround exists.
+  - **Fix**: `app/anthropic_compat.py` → `ThinkingSafeChatAnthropic(ChatAnthropic)` overrides the
+    single payload choke point `_get_request_payload` (shared by `_generate`/`_agenerate`/
+    `_stream`/`_astream`) to backfill `thinking: ""` on any outgoing thinking block missing it —
+    exactly what the non-streaming path sends, and what Anthropic accepts. `config.get_llm`'s
+    anthropic branch now returns this subclass (still lazy-imported; `isinstance ChatAnthropic`
+    holds, so existing tests pass). Offline regression test in `tests/test_config.py`
+    (`test_anthropic_backfills_omitted_thinking_block`). **98 passed**; ruff clean.
+  - **Verified live**: restarted uvicorn, re-ran the failing flows — langgraph SSE (email draft)
+    and deep_agents SSE (list+stats) both stream tokens with **0 error events** and correct final
+    events.
+
+- ✅ Phase 4 · **Step 6.2 — Exhaustive live provider/model matrix** (manual verification):
+  - Drove the real app (in-process `TestClient`, limiter disabled for the sweep) over **all 3
+    providers × all 3 models × {`/invoke`, `/invoke/stream`} × {with tools, without tools}**, plus
+    a `deep_agents` spot-check per provider, with real LLM calls. Static routes
+    (health/models/leads+filter/422/401) all correct.
+  - **Result**: 8/9 models fully green on both endpoints and both engines (streaming-with-tools
+    included — the Anthropic thinking fix holds across opus/sonnet/haiku and both engines).
+  - **Found**: `PROVIDER_MODELS["google"]` listed **`gemini-3-flash`**, which is **not a real
+    model ID** (404 NOT_FOUND — verified against Google's live model list; the FastAPI layer
+    surfaced it correctly as 502 / SSE error event). **Fixed**: replaced with
+    **`gemini-3-flash-preview`** (the actual gemini-3 flash; re-verified green across all 4 cells).
+    `gemini-3.5-flash` + `gemini-3.1-flash-lite` (default) were already valid. **98 passed**; ruff
+    clean.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
