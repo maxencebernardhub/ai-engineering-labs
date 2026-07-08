@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–2 done.** Next: Step 3
-(agent tools bound to a store, TDD).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–3 done.** Next: Step 4
+(agents: stateless LangGraph + Deep Agents builders and the runner).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -62,6 +62,26 @@ Branch: `feat/08-fastapi-docker-aws`
     **53 passed** total; `ruff check` + `ruff format --check` clean.
   - ⚠️ **Cross-step note for Step 5/6**: `resolve_api_key` raises `HTTPException(401)` directly
     (config coupled to FastAPI, per plan) — reuse it from `security.py`, don't re-map.
+- ✅ Phase 4 · **Step 3 — Agent tools bound to a store** (TDD):
+  - `app/agents/tools.py` — `build_tools(store)` returns the 6 `@tool`s (`list_leads`,
+    `add_lead`, `add_note`, `update_lead_status`, `generate_email_draft`,
+    `get_pipeline_stats`) as closures over a `LeadStore` — no module-level JSON path (adapted
+    from lab 06 `shared/tools.py`, no cross-lab import). `app/agents/__init__.py` re-exports
+    `build_tools`.
+  - **HITL → autonomous**: lab 06's `interrupt()` gates are gone. Domain errors (unknown lead,
+    illegal transition) are caught and returned as warning **strings** so the agent relays them
+    (guardrail behavior preserved), instead of raising.
+  - `generate_email_draft` uses `response_format="content_and_artifact"`: returns
+    `(human_summary, draft_dict)` — the draft is surfaced as the ToolMessage **artifact** (no
+    `drafts/` file, nothing written to disk). Step 4 runner reads `msg.artifact` to fill
+    `email_draft` in the API response.
+  - `tests/test_tools.py` — 11 tests vs `InMemoryStore` (schema/names, persistence, status
+    filter, valid/invalid/missing transitions, draft-returned-not-written via a full tool call,
+    unknown-lead message, pipeline stats). **64 passed** total; `ruff check` + `ruff format
+    --check` clean.
+  - ⚠️ **Cross-step contract for Step 4**: `generate_email_draft` surfaces the draft only as the
+    ToolMessage `artifact` (its `content` is a short summary string). The runner must read
+    `email_draft` from the tool message's `.artifact`, not parse the content.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
