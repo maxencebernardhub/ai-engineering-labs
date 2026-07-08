@@ -73,6 +73,11 @@ class Settings(BaseSettings):
     # Optional bearer auth (Step 5); disabled while unset.
     api_auth_token: str | None = None
 
+    # CORS allowed origins for the browser frontend, comma-separated. Defaults to
+    # "*" (open demo; the API uses no cookies/credentials, so `*` is safe). In the
+    # cloud, set this to the S3 static-website origin(s).
+    cors_origins: str = "*"
+
     # Server-side LLM keys: present locally (BYOK optional), absent in the cloud
     # (BYOK enforced). The Google key is named `GEMINI_API_KEY` in the shared
     # repo-root `.env`; accept `GOOGLE_API_KEY` too for portability.

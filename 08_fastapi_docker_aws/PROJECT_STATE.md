@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–4 done.** Next: Step 5
-(schemas + security).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–5 done.** Next: Step 6
+(FastAPI app).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -108,6 +108,32 @@ Branch: `feat/08-fastapi-docker-aws`
     truth for the `InvokeResponse` schema — `reply: str`, `tool_calls: [{name, args, result}]`,
     `leads_touched: [str]`, `email_draft: dict | None`, `usage: {input_tokens, output_tokens,
     total_tokens}`. SSE `/invoke/stream` consumes `astream`'s `token`/`final` events verbatim.
+
+- ✅ Phase 4 · **Step 5 — Schemas + security** (TDD):
+  - `app/schemas.py` — `Message`, `InvokeRequest` (validates `engine`/`provider`;
+    provider↔model coupling via `model_validator`; `messages` non-empty → all bad values
+    surface as `422`), `ToolCall`, `EmailDraft`, `Usage`, `InvokeResponse`, `ModelsResponse`.
+    Providers/models imported from `app.config` (single source of truth); `ENGINES` mirrored
+    locally so schemas stay free of the heavy agent-graph imports — `test_engines_mirror_runner`
+    guards against drift. `InvokeResponse` round-trips the runner dict unchanged.
+  - `app/security.py` — `get_api_key` (BYOK `X-LLM-API-Key` header dependency; resolution/401
+    stays in `config.resolve_api_key`), `require_auth` (env-gated bearer, no-op when
+    `API_AUTH_TOKEN` unset, constant-time compare), `limiter` + `init_rate_limiter` (slowapi,
+    per-IP; applied per-route via `@limiter.limit(RATE_LIMIT)` so `/health` is never throttled),
+    `configure_cors` + `configure_security` convenience wiring.
+  - **Config touch**: added `Settings.cors_origins` (comma-separated, default `"*"`; no
+    credentials → wildcard safe). **pyproject**: `flake8-bugbear.extend-immutable-calls` for
+    FastAPI's `Depends`/`Header`/`Query` defaults (avoids B008 across `security.py`/`main.py`).
+  - `tests/test_schemas.py` (10) + `tests/test_security.py` (6) — validation/coupling/422,
+    auth disabled-by-default & rejects-bad-token, rate-limit 429, CORS wildcard & restricted.
+    **88 passed** total; `ruff check` + `ruff format --check` clean.
+  - ⚠️ **Cross-step contract for Step 6**: import security dependencies from `app.security`
+    (`get_api_key`, `require_auth`, `limiter`, `RATE_LIMIT`, `configure_security`); decorate
+    **only** `/invoke` and `/invoke/stream` with `@limiter.limit(RATE_LIMIT)` (each needs a
+    `request: Request` param), add `Depends(require_auth)` on the agent routes, and call
+    `configure_security(app, settings)` at app-factory time. `/models` fills `ModelsResponse`
+    with `PROVIDER_MODELS`, `DEFAULT_MODELS`, and a per-provider `server_keys` flag derived from
+    the configured server-side keys.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
