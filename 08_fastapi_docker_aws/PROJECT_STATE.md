@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Step 0 (scaffolding) done.** Next: Step 1
-(domain + storage layer, TDD).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–1 done.** Next: Step 2
+(config + BYOK key resolution, TDD).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -27,6 +27,18 @@ Branch: `feat/08-fastapi-docker-aws`
     `pytest-asyncio` included for the async `astream` tests (Step 4).
   - Verified green: `uv sync`, heavy-import sanity check, `ruff check`, `ruff format --check`,
     `pytest` (0 tests yet — expected).
+- ✅ Phase 4 · **Step 1 — Domain + storage layer** (TDD):
+  - `app/domain.py` — `STATUSES`, `INITIAL_STATUS`, `VALID_TRANSITIONS`, `new_lead(...)`
+    (random `lead_<6 hex>` ids, injectable `today`), `validate_transition(...)`; typed
+    `LeadNotFoundError` / `InvalidTransitionError` (both `ValueError` subclasses).
+  - `app/storage/` — `LeadStore` ABC + `ListBackedStore` (memory/S3 share `_load`/`_save`);
+    `InMemoryStore`, `S3Store` (single JSON object; RMW race documented as known limitation),
+    `PostgresStore` (SQLModel, JSON `notes`, SQLite-parity), `get_store(settings)` factory.
+  - **Decision (confirmed with user)**: new-lead ids random (as lab 06); `seed_if_empty(leads)`
+    added to the `LeadStore` interface — seeds demo data verbatim iff store empty (boot-time,
+    idempotent); tests start empty.
+  - `tests/test_storage.py` — 8-test contract suite parametrized over memory / SQLite / moto-S3,
+    plus domain + factory + seed tests. **42 passed**, `ruff check` + `ruff format --check` clean.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
