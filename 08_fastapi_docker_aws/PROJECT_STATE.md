@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–6 done.** Next: Step 7
-(frontend).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–7 done.** Next: Step 8
+(Docker).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -216,6 +216,38 @@ Branch: `feat/08-fastapi-docker-aws`
     **`gemini-3-flash-preview`** (the actual gemini-3 flash; re-verified green across all 4 cells).
     `gemini-3.5-flash` + `gemini-3.1-flash-lite` (default) were already valid. **98 passed**; ruff
     clean.
+
+- ✅ Phase 4 · **Step 7 — Frontend (vanilla, no build step)** (live-verified in a real browser):
+  - `frontend/index.html` + `frontend/app.js` + `frontend/styles.css` — chat window + settings
+    sidebar, served at `/` by the Step 6 `StaticFiles(html=True)` mount. No framework, no bundler;
+    `API_BASE` defaults to same-origin and is the single injection point `deploy/frontend_deploy.sh`
+    (Step 9) will rewrite to the Lambda Function URL for the S3-hosted page.
+  - **Design**: sober "product" look chosen with the user (from a 3-way visual mockup); token-driven
+    light/dark (`prefers-color-scheme` + in-app `data-theme` toggle, persisted), responsive (sidebar
+    stacks above chat < 760px).
+  - **Contract consumed**: `GET /models` drives the provider→model **filtered** dropdowns, the
+    per-provider default, and the **Required/Optional** BYOK badge (from `server_keys`); `POST
+    /invoke/stream` consumed via **`fetch` + manual SSE parsing** (not `EventSource` — the endpoint is
+    a POST with a body and the `X-LLM-API-Key` header); renders the streamed reply plus `tool_calls`
+    (collapsible trace), `email_draft` (card), `leads_touched` (chips), and `usage`; `GET /leads` feeds
+    a live Pipeline panel (auto-refreshed after each run). BYOK key stored **per provider** in
+    `localStorage`; conversation history persisted in `localStorage` (stateless server, client owns
+    state); `/docs` link in a new tab.
+  - ⚠️ **Two bugs found during live browser testing (curl had masked both) and fixed**:
+    1. **SSE frame split** — `sse-starlette` separates events with `\r\n\r\n`; the client split on
+       `\n\n`, so **no frame ever parsed** and every prompt returned "The response ended unexpectedly."
+       (curl+python read line-wise in universal-newline mode, hiding it). Fix: strip raw `\r` bytes on
+       decode before splitting (`app.js`).
+    2. **Sidebar overlap** — `.sidebar-foot { margin-top:auto }` inside an `overflow` flex column made
+       the docs link / New-conversation button overlap the Pipeline list. Fix: real flex distribution
+       (`.leads` grows with an internally-scrolling list; foot is `flex-shrink:0`).
+  - **Verified live (Chrome, driven)**: streaming works across **all 3 providers × both engines**;
+    filtered model dropdown; Actions trace; `leads_touched` + Pipeline auto-refresh (8→9); email-draft
+    card; theme toggle + persistence across reload; conversation/provider/engine persistence; **no
+    console errors**. Purely static assets — no new Python code, tests still **98 passed**; ruff clean.
+  - ⚠️ **Note for Step 8 (Docker)**: local runs use `LEAD_STORE=memory` (default) — leads survive
+    browser reloads only because the uvicorn process stays up, **not** durably; Compose sets
+    `LEAD_STORE=postgres` for real persistence. Cloud uses `s3`.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
