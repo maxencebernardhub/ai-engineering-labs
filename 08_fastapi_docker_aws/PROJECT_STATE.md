@@ -2,8 +2,8 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–7 done.** Next: Step 8
-(Docker).
+🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–8 done.** Next: Step 9
+(AWS deploy scripts + docs).
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -248,6 +248,37 @@ Branch: `feat/08-fastapi-docker-aws`
   - ⚠️ **Note for Step 8 (Docker)**: local runs use `LEAD_STORE=memory` (default) — leads survive
     browser reloads only because the uvicorn process stays up, **not** durably; Compose sets
     `LEAD_STORE=postgres` for real persistence. Cloud uses `s3`.
+
+- ✅ Phase 4 · **Step 8 — Docker** (built + `docker compose up` verified locally):
+  - `Dockerfile` — multi-stage: **builder** (`python:3.13-slim` + pinned `uv 0.11.26` copied from
+    `ghcr.io/astral-sh/uv`) runs `uv sync --frozen --no-dev --no-install-project` into `/app/.venv`
+    (deps copied before app code so the dep layer caches); **runtime** (`python:3.13-slim`, non-root
+    `appuser`, uid 10001) carries only the venv + `app/` + `frontend/` + `data/`. Bundles the **AWS
+    Lambda Web Adapter** binary from `public.ecr.aws/awsguru/aws-lambda-adapter:1.0.1` (pinned,
+    multi-arch; latest stable per user) at `/opt/extensions/lambda-adapter` — inert outside Lambda;
+    `AWS_LWA_PORT=8000` + `AWS_LWA_READINESS_CHECK_PATH=/health`. Entry point `uvicorn app.main:app`
+    on `0.0.0.0:8000`, same image local ↔ Lambda.
+  - `docker-compose.yml` — `api` (`build: .`; `8000:8000`; `env_file: ../.env` for BYOK-optional LLM
+    keys; `environment:` pins `LEAD_STORE=postgres` + `DATABASE_URL=postgresql+psycopg://leads:leads@db:5432/leads`
+    + `CORS_ORIGINS=*`; `depends_on: db: condition: service_healthy`; Python-based `/health` healthcheck
+    since the slim image has no curl) + `db` (`postgres:16`, named volume `leads_pgdata`, `pg_isready`
+    healthcheck, port `5432` published so the host can run the integration test). `.dockerignore`
+    already excluded `.env`/tests/docs/deploy (Step 0).
+  - `tests/test_postgres_integration.py` — `test_postgres_store_parity`, marked `@integration` +
+    skipped unless `DATABASE_URL` is a Postgres URL; runs the store contract against **real Postgres**
+    and asserts **durability** (a fresh `PostgresStore` on a new connection re-reads the persisted
+    lead). Truncates the `lead` table around itself. Default `pytest -m "not integration"` and CI
+    never touch a DB. **98 passed, 1 deselected**; ruff clean.
+  - **Verified live** (Docker Desktop, daemon up): image builds (~30 s deps layer); `docker compose up`
+    → both services **healthy**; `GET /` serves the frontend from the container, `/health`, `/models`
+    (`server_keys` all True from `../.env`), `/leads` = 8 seeded rows; **`psql` confirms 8 rows in the
+    `lead` table** (really Postgres, not memory). **Durability proven**: added a lead via `POST /invoke`
+    → `docker compose restart api` → lead still present (9 leads); a `memory` backend would reset to 8.
+    Integration test green against the Compose DB. Left the stack re-seeded to 8 (integration test
+    empties the table; restarting `api` re-seeds).
+  - ⚠️ **Note for Step 9 (deploy)**: same image → ECR → Lambda (container + Function URL, streaming
+    enabled so LWA can stream SSE); cloud env sets `LEAD_STORE=s3` + `LEADS_BUCKET`, **no** LLM keys
+    (BYOK enforced). Build with `--platform` matching the Lambda arch.
 
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
