@@ -1,9 +1,30 @@
-name: CI
+name: CI — Lab 04 (Multi-provider)
 
-on: [push, pull_request]
+# Tests for `04_multi_provider/` only. This workflow lives at the repo root
+# because GitHub reads workflows exclusively from the root `.github/` directory;
+# the `paths:` filters below keep it scoped to the lab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "04_multi_provider/**"
+      - ".github/workflows/ci-04.yml"
+  pull_request:
+    paths:
+      - "04_multi_provider/**"
+      - ".github/workflows/ci-04.yml"
+
+permissions:
+  contents: read
+
+# A new push to the same branch cancels the run it supersedes.
+concurrency:
+  group: ci-04-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
+    name: Unit tests
     runs-on: ubuntu-latest
 
     steps:
