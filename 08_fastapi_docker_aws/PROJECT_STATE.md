@@ -2,9 +2,9 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — **Steps 0–11 done** (0–8 code/Docker, **9+11 merged**:
-deploy scripts authored **and** executed live, **10**: documentation). Next: **Step 12** (CI
-workflow), then Phase 7 (commit/PR).
+🟢 Phase 4 (TDD implementation) — **Steps 0–12 done** (0–8 code/Docker, **9+11 merged**:
+deploy scripts authored **and** executed live, **10**: documentation, **12**: CI workflow).
+**Phase 4 is complete.** Next: Phase 5 (commit/PR).
 
 **🚀 The lab is live in AWS** (`ca-central-1`, deployed 2026-07-14):
 
@@ -348,6 +348,47 @@ Branch: `feat/08-fastapi-docker-aws`
     "6 tools" match the code. ASCII diagrams regenerated **by script** (widths computed, not
     hand-counted) after alignment drift was spotted.
 
+- ✅ Phase 4 · **Step 12 — CI workflow** (validated with `actionlint` + a clean-checkout dry run):
+  - `.github/workflows/ci-08.yml` (repo **root** — GitHub only reads the root `.github/`), path-filtered
+    on `08_fastapi_docker_aws/**` **and on the workflow file itself** (so a CI change is tested by CI).
+    Job `quality`: `uv sync --frozen` → `ruff check .` → `ruff format --check .` →
+    `uv run pytest -m "not integration"`, with `defaults.run.working-directory` set to the lab.
+  - **Details that matter**: `actions/checkout@v7` + `astral-sh/setup-uv@v8` (latest, checked against the
+    GitHub API); **uv pinned to `0.11.26`** — the same version as the Dockerfile, so CI / local / image
+    resolve deps identically; cache keyed on `08_fastapi_docker_aws/uv.lock`; Python 3.13 comes from
+    `.python-version` (not duplicated in YAML, which would drift); `uv sync --frozen` **fails on a stale
+    lock** (free guardrail); `push: branches: [main]` + `pull_request` avoids double runs on PR branches;
+    `permissions: contents: read`; `concurrency` cancels superseded runs. **No API key** — the suite
+    drives the fake LLM; `not integration` deselects the Postgres test.
+  - ⚠️ **Discovery — the pre-existing root `ci.yml` was never repo-wide**: added in the *lab 04* commit
+    (`baf8c19`), named just `CI`, **no path filter**, running `04_multi_provider`'s unit tests on every
+    push. Consequence: **every green "CI" check on the lab 08 commits was attesting lab 04's tests** —
+    lab 08 had never been covered by CI at all.
+  - **Decision (with user)** — restore coherence by *renaming*, not merging: `ci.yml` → **`ci-04.yml`**
+    via `git mv` (rename detected, history preserved) + the same scoping treatment (path filter on
+    `04_multi_provider/**`, explicit `name:`, `permissions`, `concurrency`). The **job body is
+    deliberately untouched** (`uv sync --extra dev` + `pytest tests/unit/`), and its `checkout@v4` /
+    `setup-uv@v4` pins are **left alone on purpose**: they work, and bumping an unrelated green workflow
+    inside a lab-08 PR is needless risk. Both files now read `ci-<lab>.yml` / `CI — Lab <n>`.
+  - **Rejected (for now) — merging both into one matrix workflow**: that *is* the documented Future work,
+    and the labs are not uniform enough to just concatenate. Concretely: **08 is the only non-packaged
+    lab** (`[dependency-groups]` → `uv sync --frozen`) while **01–07 are packaged** with an `extra:dev`
+    (`uv sync --extra dev`); **08 uses a flat `tests/` + markers** (`-m "not integration"`) while 01–07
+    physically split `tests/unit/` + `tests/integration/`; **`ci.yml` runs no ruff at all**, so
+    harmonizing means enabling lint on 4 more labs; **labs 05/06/07 have tests but have never run in CI**
+    (unknown green — 05/06 integration needs API keys, 07 needs Ollama); and GitHub's `paths:` filter is
+    **workflow-level, not per matrix leg**, so per-lab filtering needs `dorny/paths-filter` + a dynamic
+    matrix, or dropping filters entirely. All of it belongs in a focused PR, not this one.
+  - **Verified**: `actionlint` clean on **both** workflows; the lab-08 pipeline run against a **fresh
+    `git clone` with no repo-root `.env` and no exported keys** — **98 passed, 1 deselected**, ruff clean
+    (proves the fake-LLM suite is truly keyless and makes no network call, which the local run couldn't
+    show since `.env` was present); lab 04's exact CI command still green (**22 passed**).
+  - ⚠️ **Trigger behaviour (verified)**: pushing to the feature branch fires **nothing** — both
+    workflows scope `push:` to `main` and rely on `pull_request` elsewhere, which is what stops the
+    duplicate runs. Checks therefore appear when the PR is opened, not on every push as the old
+    unscoped `ci.yml` did. **This PR runs *both* workflows**: it renames `ci-04.yml`, a path that
+    workflow's own filter watches. Only *later* PRs that leave lab 04 untouched will skip `ci-04.yml`.
+
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
 - **Live AWS URL is IN scope** — the feature is done only when the public URL is deployed,
@@ -370,13 +411,10 @@ Branch: `feat/08-fastapi-docker-aws`
 
 ## Next Steps
 
-- ✅ Phase 4 — TDD implementation: **Steps 0–11 done** (code, tests, frontend, Docker, deploy
-  scripts **executed live**, documentation). Live public URL validated end-to-end.
-- 🔵 **Step 12 — CI workflow**: `.github/workflows/ci-08.yml` at the **repo root** (GitHub only
-  reads root `.github/`), path-filtered on `08_fastapi_docker_aws/**`; job = `ruff check` +
-  `ruff format --check` + `uv run pytest -m "not integration"`. Designed to generalize later into
-  a repo-wide matrix workflow (see Future work).
-- 🔵 Phase 7 — Commit(s), PR, and post-merge cleanup.
+- ✅ Phase 4 — TDD implementation: **Steps 0–12 done** (code, tests, frontend, Docker, deploy
+  scripts **executed live**, documentation, CI workflow). Live public URL validated end-to-end.
+  **Phase 4 is complete.**
+- 🔵 Phase 5 — Commit(s), PR, and post-merge cleanup.
 
 **Resolved (2026-07-15)**: the live URLs are published in the root README, the lab README, and this
 file. All three now state that the deployment is a **demo that may be taken offline**, and point at
