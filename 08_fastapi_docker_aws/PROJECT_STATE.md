@@ -2,8 +2,17 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — in progress. **Steps 0–8 done.** Next: Step 9
-(AWS deploy scripts + docs).
+🟢 Phase 4 (TDD implementation) — **Steps 0–11 done** (0–8 code/Docker, **9+11 merged**:
+deploy scripts authored **and** executed live, **10**: documentation). Next: **Step 12** (CI
+workflow), then Phase 7 (commit/PR).
+
+**🚀 The lab is live in AWS** (`ca-central-1`, deployed 2026-07-14):
+
+- **App (S3 static website)** → `http://lab08-frontend-maxencebernardhub.s3-website.ca-central-1.amazonaws.com`
+- **API (Lambda Function URL)** → `https://pynmzop7b3cmyjhubxulyozkai0ydmsh.lambda-url.ca-central-1.on.aws/`
+
+Both READMEs flag this as a **demo deployment that may be taken offline**, and point at
+`deploy/` to rebuild it — so a teardown does not invalidate the docs.
 
 Branch: `feat/08-fastapi-docker-aws`
 
@@ -280,6 +289,65 @@ Branch: `feat/08-fastapi-docker-aws`
     enabled so LWA can stream SSE); cloud env sets `LEAD_STORE=s3` + `LEADS_BUCKET`, **no** LLM keys
     (BYOK enforced). Build with `--platform` matching the Lambda arch.
 
+- ✅ Phase 4 · **Steps 9 + 11 (merged) — AWS deploy scripts authored AND executed live**
+  (2026-07-14, guided session; user drove all account/IAM/credential steps):
+  - **Deliverables**: `deploy/deploy.sh` (7 idempotent stages: `preflight`/`ecr`/`iam`/`s3`/
+    `lambda`/`url`/`concurrency`, `set -euo pipefail`, vars at top, `--help`, single-stage
+    invocation), `deploy/frontend_deploy.sh` (bucket + public policy + website hosting + injects
+    the Function URL into `window.API_BASE_URL` + `s3 sync`), `deploy/README.md` (architecture,
+    Docker↔AWS interfaces, per-stage explanations, reproducible step-by-step, new-machine memo,
+    gotchas, cost model, teardown).
+  - **Guardrails first**: 2 AWS Budgets created **before any resource** (zero-spend + 1 $/month).
+    IAM user `lab08-deployer` (CLI-only, 5 managed policies); `aws configure` → `ca-central-1`.
+  - **Deployed resources** (all `ca-central-1`, arch **arm64**): ECR `lab08-commercial-agent` ·
+    IAM role `lab08-lambda-role` (least-privilege) · S3 `lab08-leads-maxencebernardhub` (private,
+    all public access blocked) · Lambda `lab08-commercial-agent` (image, 2048 MB, 120 s,
+    `LEAD_STORE=s3` + `LEADS_BUCKET` + `AWS_LWA_INVOKE_MODE=response_stream` + `CORS_ORIGINS`,
+    **no LLM key**) · Function URL (`AuthType=NONE`, `InvokeMode=RESPONSE_STREAM`) · S3
+    `lab08-frontend-maxencebernardhub` (public static website).
+  - ⚠️ **Three real bugs found only because the scripts were run** (the whole point of merging 9+11):
+    1. **Docker attestations** — buildx wraps images in an OCI image index with provenance by
+       default; Lambda rejects that media type. Fix: `docker build --provenance=false`. (ECR's
+       **Type** column must read `Image`, not *Image index*.)
+    2. **Missing `s3:ListBucket` → boot crash** (`Runtime.ExitError: exit status 1`). Without
+       `ListBucket`, `GetObject` on the not-yet-existing `leads.json` returns **403 AccessDenied**
+       instead of **404 NoSuchKey** (S3 hides object existence from non-listers), so
+       `seed_if_empty` raised and uvicorn exited. Fix: add `s3:ListBucket` on the **bucket** ARN.
+       `GetObject` + `PutObject` + `ListBucket` is the idiomatic S3 policy.
+    3. **Function URL 403 despite a correct config** — since **Oct 2025** a public Function URL
+       requires **both** `lambda:InvokeFunctionUrl` **and** `lambda:InvokeFunction` in the
+       resource policy. Fix: a second `add-permission` (unconditioned — `--function-url-auth-type`
+       is only valid for `InvokeFunctionUrl`).
+  - ⚠️ **Console false positive (documented)**: the Function URL page keeps showing *"missing
+    permissions required for public access"* because its banner heuristic does not recognise the
+    permissions split across **two** statements. The live `curl` (200) is the authority.
+  - ⚠️ **Reserved concurrency not applied**: the account's Lambda concurrency limit is **10**, and
+    reserving would push unreserved below the required minimum. **Non-fatal by design** — the
+    script warns and continues; the account limit itself caps concurrency (and therefore cost).
+    The reservation applies automatically on an account with a higher limit.
+  - **Live validation (the lab's "done")**: `/health` 200 · `/models` with `server_keys` **all
+    false** (BYOK enforced — no server key in the cloud) · `/leads` served from S3 · **agent runs
+    end-to-end** (user tested Gemini and OpenAI/gpt-5.4 via BYOK, both engines) · **SSE streaming**
+    works through the Function URL · **S3 persistence proven** (8 seed → 9 → 10 leads across
+    browser restarts; `leads.json` grew in the bucket) · **CORS verified** cross-origin
+    (`Sec-Fetch-Site: cross-site` + `Access-Control-Allow-Origin` naming the S3 origin).
+  - **19 screenshots** captured in `docs/screenshots/` (all referenced: 7 in the lab README, 12 in
+    `deploy/README.md`).
+
+- ✅ Phase 4 · **Step 10 — Documentation**:
+  - `README.md` (lab) — live-demo links, "what this lab demonstrates", the **notebook → production**
+    comparison table vs lab 06, aligned architecture diagram + annotated file tree, API contract,
+    local run (uvicorn + Compose), deploy pointer, key concepts (stateless · BYOK · `LeadStore` ·
+    LWA vs Mangum · the `anthropic_compat` fix), tests, cost model.
+  - Root `README.md` — the planned `08_fastapi_backend` + `09_docker_deploy` rows **merged** into a
+    single `08_fastapi_docker_aws` row (✅ Available); **all 8 labs are now ✅, no "Planned" rows
+    left**; intro reframed as a complete arc (lab 01 → lab 08) with a **live-demo callout**; a
+    `08` "Key Files" section added; BYOK note under the root `.env` block.
+  - **Verified**: markdownlint clean on all three READMEs; 54 root links + all 19 images resolve;
+    live URLs return 200; the documented endpoints match the live OpenAPI; "8 seed leads" and
+    "6 tools" match the code. ASCII diagrams regenerated **by script** (widths computed, not
+    hand-counted) after alignment drift was spotted.
+
 ## Phase 2 refinements (changelog vs the initial provisional plan)
 
 - **Live AWS URL is IN scope** — the feature is done only when the public URL is deployed,
@@ -292,20 +360,28 @@ Branch: `feat/08-fastapi-docker-aws`
 - **Dependency versions**: `>=` latest stable resolved via `uv add`, pinned in `uv.lock`.
 - Tail reworked: added **Step 0** (scaffolding); **Step 10** = documentation; **Step 11** =
   guided live deployment & validation (was "AWS deployment"); **Step 12** = CI workflow (new).
+- **Revision (2026-07-11): Steps 9 and 11 merged.** The deploy scripts are authored **and** run
+  live in one guided session (write→run→fix), instead of writing them blind then executing later —
+  a deploy script is only proven once it runs. User is creating the AWS account now. Guardrails:
+  **1 $ AWS Budget + alert set up first**; the user alone handles account/payment/IAM/`aws
+  configure`; resource-creating or cost-incurring commands are confirmed before running (read-only
+  `describe`/`get` run freely). Rationale + collaboration rules are in the implementation plan
+  ("Locked decisions" + the Step 9/11 sections).
 
 ## Next Steps
 
-Branch is already created; env init (`uv sync`) runs during implementation Step 0, once
-`pyproject.toml` exists. Mapping of the `/feature` phases to the plan steps:
-
-- 🔵 Phase 4 — TDD implementation of plan **Steps 0–10 and 12** (scaffolding, code, tests,
-  frontend, Docker, deploy scripts, docs, CI), including local Docker verification
-  (build + `docker compose up`).
-- 🔵 Phase 5 — Spec compliance review (`spec-reviewer`).
-- 🔵 Phase 6 — Code review (`code-reviewer`).
-- 🔵 Guided live deployment & validation — plan **Step 11**, collaborative: user runs the
-  guided AWS steps; validate the public URL end-to-end **before merge** (live URL = done).
+- ✅ Phase 4 — TDD implementation: **Steps 0–11 done** (code, tests, frontend, Docker, deploy
+  scripts **executed live**, documentation). Live public URL validated end-to-end.
+- 🔵 **Step 12 — CI workflow**: `.github/workflows/ci-08.yml` at the **repo root** (GitHub only
+  reads root `.github/`), path-filtered on `08_fastapi_docker_aws/**`; job = `ruff check` +
+  `ruff format --check` + `uv run pytest -m "not integration"`. Designed to generalize later into
+  a repo-wide matrix workflow (see Future work).
 - 🔵 Phase 7 — Commit(s), PR, and post-merge cleanup.
+
+**Resolved (2026-07-15)**: the live URLs are published in the root README, the lab README, and this
+file. All three now state that the deployment is a **demo that may be taken offline**, and point at
+`deploy/` to redeploy — so tearing the stack down (see `deploy/README.md` → *Teardown*) leaves the
+documentation truthful instead of leaving dead links unexplained.
 
 ## Future work (separate follow-up after merge)
 

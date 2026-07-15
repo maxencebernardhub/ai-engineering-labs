@@ -8,6 +8,15 @@ the `/feature` workflow and validated before implementation.
 - **Live URL is in scope** — the feature is "done" only when a public AWS URL is deployed,
   tested, and validated end-to-end. Deployment is collaborative: the plan delivers scripts +
   a guide; the user (no AWS account yet) executes the manual AWS steps with guidance.
+- **Revision (2026-07-11) — Steps 9 and 11 are merged.** The deploy scripts are authored **and**
+  executed live in a single guided session, rather than written blind (Step 9) then run later
+  (Step 11). Rationale: a deploy script is only proven once it runs, so authoring and first real
+  execution belong in one tight write→run→fix loop (AWS CLI has many footguns: Function URL
+  streaming, IAM trust policy, ECR auth, Lambda image platform). The user creates the AWS account
+  now. Collaboration rules: the **user alone** creates the account, enters payment, creates the
+  IAM user/keys, and runs `aws configure`; a **1 $ AWS Budget + email alert is set up first**,
+  before any resource; anything that creates or costs (ECR/Lambda/S3/IAM) is shown and confirmed
+  before running, while read-only `describe`/`get` calls run freely.
 - **Deploy tooling**: Bash + AWS CLI (transparent, teaches the primitives).
 - **Storage tests**: SQLite (Postgres store) + `moto` (S3 store), no infra required; **plus** a
   `@integration` Postgres smoke test run locally against the Docker Compose DB (Phase 4).
@@ -127,7 +136,11 @@ unaffected.
 - **Verify** locally: `docker compose up`, `curl /health`, run the `@integration` Postgres
   smoke test against the live Compose DB
 
-### Step 9 — AWS deploy scripts + docs
+### Step 9 — AWS deploy scripts + docs — **merged with Step 11 (authored + run live together)**
+
+> Per the 2026-07-11 revision, this step is executed **jointly with Step 11**: each script is
+> written and then run against the real account in the same session (write→run→fix), not authored
+> blind for later execution.
 
 - `deploy/deploy.sh` — build → ECR push → create Lambda from image → Function URL (streaming) →
   reserved concurrency → IAM role (S3 least-privilege)
@@ -141,13 +154,18 @@ unaffected.
   screenshot placeholders
 - Update root `README.md` (row `08` → ✅, merge old `08`/`09` rows); update `PROJECT_STATE.md`
 
-### Step 11 — Guided live deployment & validation *(collaborative; live URL = done)*
+### Step 11 — Guided live deployment & validation *(collaborative; live URL = done)* — **merged into Step 9**
+
+> Per the 2026-07-11 revision, this is no longer a separate later session: it runs **together with
+> Step 9** (author each script, then execute it live immediately). Sequence within the merged
+> session: (1) **1 $ AWS Budget + email alert first**, (2) AWS account / IAM user / `aws configure`
+> (user-driven), (3) run `deploy.sh` stage by stage, (4) run `frontend_deploy.sh`, (5) CORS.
 
 - Walk the user through `deploy/README.md`: AWS account, Budget, IAM/CLI, `deploy.sh`,
   `frontend_deploy.sh`, CORS
 - Validate end-to-end on the live public URL: `/health`, `/invoke`, SSE streaming, S3
   persistence, BYOK enforced (no server key)
-- Capture screenshots for the README
+- Capture screenshots for the README (feeds Step 10)
 
 ### Step 12 — CI workflow
 
