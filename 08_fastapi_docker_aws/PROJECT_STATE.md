@@ -2,9 +2,14 @@
 
 ## Status
 
-🟢 Phase 4 (TDD implementation) — **Steps 0–12 done** (0–8 code/Docker, **9+11 merged**:
-deploy scripts authored **and** executed live, **10**: documentation, **12**: CI workflow).
-**Phase 4 is complete.** Next: Phase 5 (commit/PR).
+✅ **Feature complete and merged** — PR [#92](https://github.com/maxencebernardhub/ai-engineering-labs/pull/92)
+merged into `main` on **2026-07-15** (merge commit `08d041a`); branch `feat/08-fastapi-docker-aws`
+deleted. Phase 4 delivered **Steps 0–12** (0–8 code/Docker, **9+11 merged**: deploy scripts authored
+**and** executed live, **10**: documentation, **12**: CI workflow); Phase 5 closed the loop
+(commit/PR/cleanup). Phases 5 and 6 of the `/feature` workflow as originally numbered (spec review /
+code review) were deliberately skipped for this lab, so commit/PR became Phase 5.
+
+Only the documented **Future work** remains (repo-wide matrix CI), tracked as separate follow-up.
 
 **🚀 The lab is live in AWS** (`ca-central-1`, deployed 2026-07-14):
 
@@ -414,7 +419,18 @@ Branch: `feat/08-fastapi-docker-aws`
 - ✅ Phase 4 — TDD implementation: **Steps 0–12 done** (code, tests, frontend, Docker, deploy
   scripts **executed live**, documentation, CI workflow). Live public URL validated end-to-end.
   **Phase 4 is complete.**
-- 🔵 Phase 5 — Commit(s), PR, and post-merge cleanup.
+- ✅ Phase 5 — Commit(s), PR, and post-merge cleanup: 3 CI commits on top of Steps 0–11
+  (`chore(ci)` × 2 + `fix(ci)`), **PR #92 merged** into `main` on 2026-07-15 (merge commit,
+  preserving the per-step history), feature branch deleted locally and on the remote.
+  - ⚠️ **CI caught what local validation could not**: the first PR run failed in 3 s on
+    `Unable to resolve action astral-sh/setup-uv@v8` — **setup-uv publishes no moving `v8` major
+    tag** (its major tags stop at `v7` while releases are on 8.x), unlike `actions/checkout@v7`.
+    `actionlint` cannot catch this (it does not resolve action refs over the network), and the
+    clean-clone dry run only exercised the *commands*, never the *runner*. Fixed by pinning the
+    exact tag `astral-sh/setup-uv@v8.3.2` (`7919fb5`), consistent with pinning uv to 0.11.26.
+  - **Both workflows green on the PR** (as predicted, `ci-04.yml` ran too because the PR renames
+    it): lab 08 = `All checks passed!` + 27 files formatted + **98 passed, 1 deselected** on the
+    runner with **no API key**; lab 04 = 22 passed.
 
 **Resolved (2026-07-15)**: the live URLs are published in the root README, the lab README, and this
 file. All three now state that the deployment is a **demo that may be taken offline**, and point at
