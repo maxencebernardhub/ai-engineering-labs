@@ -1,0 +1,57 @@
+[project]
+name = "fastapi-docker-aws"
+version = "0.1.0"
+description = "Commercial assistant agent (lab 06) exposed as a stateless FastAPI service, containerized, and deployed to AWS Lambda."
+requires-python = ">=3.13"
+dependencies = [
+    "boto3>=1.43.40",
+    "deepagents>=0.6.12",
+    "fastapi>=0.139.0",
+    "langchain-anthropic>=1.4.8",
+    "langchain-google-genai>=4.2.6",
+    "langchain-openai>=1.3.3",
+    "langgraph>=1.2.7",
+    "psycopg[binary]>=3.3.4",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "python-dotenv>=1.2.2",
+    "slowapi>=0.1.10",
+    "sqlmodel>=0.0.39",
+    "sse-starlette>=3.4.5",
+    "uvicorn[standard]>=0.49.0",
+]
+
+[tool.uv]
+# This is a deployable service, not an installable library: uv manages the
+# environment and dependencies but does not build/install `app` as a package.
+package = false
+
+[tool.pytest.ini_options]
+# `app` is importable in tests because the lab root is on sys.path (no editable
+# install needed). `asyncio_mode = "auto"` lets async tests run without an
+# explicit marker on each coroutine.
+pythonpath = ["."]
+asyncio_mode = "auto"
+markers = [
+    "integration: requires external infra or a real LLM (deselect with '-m \"not integration\"')",
+]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency-injection idiom puts callables (Depends/Header/Query/...)
+# in argument defaults; these are intentional, not the B008 mutable-default bug.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header", "fastapi.Query"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "moto[s3]>=5.2.2",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15.20",
+]

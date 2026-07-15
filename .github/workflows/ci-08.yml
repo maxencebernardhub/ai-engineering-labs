@@ -1,0 +1,63 @@
+name: CI — Lab 08 (FastAPI + Docker + AWS)
+
+# Lint + tests for `08_fastapi_docker_aws/` only. This workflow lives at the repo
+# root because GitHub reads workflows exclusively from the root `.github/`
+# directory; the `paths:` filters below keep it scoped to the lab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "08_fastapi_docker_aws/**"
+      - ".github/workflows/ci-08.yml"
+  pull_request:
+    paths:
+      - "08_fastapi_docker_aws/**"
+      - ".github/workflows/ci-08.yml"
+
+permissions:
+  contents: read
+
+# A new push to the same branch cancels the run it supersedes.
+concurrency:
+  group: ci-08-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Ruff + tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 08_fastapi_docker_aws
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up uv
+        # Exact tag: setup-uv publishes no moving `v8` major tag (its major tags
+        # stop at v7, while releases are on 8.x).
+        uses: astral-sh/setup-uv@v8.3.2
+        with:
+          # Pinned to the version the Dockerfile uses, so CI, local runs and the
+          # image all resolve dependencies identically.
+          version: "0.11.26"
+          enable-cache: true
+          cache-dependency-glob: "08_fastapi_docker_aws/uv.lock"
+
+      # Installs the exact versions from uv.lock (fails if the lock is stale)
+      # into .venv, dev group included. Python 3.13 comes from `.python-version`
+      # and is downloaded by uv if the runner lacks it.
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      # No API key is configured: the suite drives a fake LLM and makes no
+      # network calls. `not integration` deselects the Postgres test, which needs
+      # the Docker Compose database.
+      - name: Tests
+        run: uv run pytest -m "not integration"

@@ -1,0 +1,55 @@
+# Local development stack: the API container + a PostgreSQL database.
+#
+# This mirrors a real "local stack != serverless stack" split: locally the leads
+# are persisted in Postgres (durable, survives restarts thanks to a named
+# volume); in the cloud the same image uses the S3 backend instead. LLM keys are
+# read from the repo-root .env (BYOK-optional locally); no lab-level .env exists.
+#
+# Usage:  docker compose up --build   →  http://localhost:8000
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"          # host:container — reach the app at localhost:8000
+    # Repo-root .env (shared across labs): supplies the server-side LLM keys so
+    # BYOK is optional locally. Secrets only — never committed, never baked in.
+    env_file:
+      - ../.env
+    # Non-secret runtime config. `environment` overrides `env_file` on conflict,
+    # so the storage backend is pinned to Postgres here regardless of .env.
+    environment:
+      LEAD_STORE: postgres
+      # `db` is the service name below — Docker's internal DNS resolves it to the
+      # database container. psycopg3 driver via SQLAlchemy: postgresql+psycopg.
+      DATABASE_URL: postgresql+psycopg://leads:leads@db:5432/leads
+      CORS_ORIGINS: "*"
+    depends_on:
+      db:
+        condition: service_healthy   # wait until Postgres passes its healthcheck
+    healthcheck:
+      # No curl in the slim image — use the venv's Python to probe /health.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s        # grace period while the app imports & boots
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: leads
+      POSTGRES_PASSWORD: leads
+      POSTGRES_DB: leads
+    ports:
+      - "5432:5432"            # published so the host can run the @integration test
+    volumes:
+      - leads_pgdata:/var/lib/postgresql/data   # durable storage across restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leads -d leads"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  leads_pgdata:                # named volume — persists until explicitly removed

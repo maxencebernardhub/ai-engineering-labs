@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commercial Assistant</title>
+  <meta name="description" content="Stateless commercial-agent demo — LangGraph & Deep Agents, BYOK." />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    // API base URL. Empty string = same origin (local dev / Docker, where FastAPI
+    // serves this page). deploy/frontend_deploy.sh rewrites this line with the
+    // Lambda Function URL so the S3-hosted page can reach the API cross-origin.
+    window.API_BASE_URL = "";
+    // Apply the saved theme before first paint to avoid a flash.
+    (function () {
+      var t = localStorage.getItem("ca:theme");
+      if (t) document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+<body>
+  <div class="app">
+    <!-- ---------------------------------------------------------------- -->
+    <!-- Sidebar: settings + live pipeline                                 -->
+    <!-- ---------------------------------------------------------------- -->
+    <aside class="sidebar" aria-label="Settings and pipeline">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◆</span>
+        <div class="brand-text">
+          <h1>Commercial Assistant</h1>
+          <p class="brand-sub">LangGraph &amp; Deep Agents · BYOK</p>
+        </div>
+        <button type="button" id="themeToggle" class="icon-btn" aria-label="Toggle light / dark theme" title="Toggle theme">◐</button>
+      </div>
+
+      <div class="settings">
+        <div class="field">
+          <span class="field-label">Engine</span>
+          <div class="segmented" id="engine" role="radiogroup" aria-label="Agent engine">
+            <button type="button" class="seg on" data-engine="langgraph" role="radio" aria-checked="true">LangGraph</button>
+            <button type="button" class="seg" data-engine="deep_agents" role="radio" aria-checked="false">Deep Agents</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="provider">Provider</label>
+          <select id="provider" class="control"></select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="model">Model</label>
+          <select id="model" class="control"></select>
+        </div>
+
+        <div class="field">
+          <div class="field-label-row">
+            <label class="field-label" for="apiKey">API key</label>
+            <span id="keyBadge" class="badge">…</span>
+          </div>
+          <div class="key-input">
+            <input id="apiKey" class="control" type="password" autocomplete="off"
+                   spellcheck="false" placeholder="Paste your key…" />
+            <button type="button" id="keyToggle" class="key-toggle" aria-label="Show or hide the key">Show</button>
+          </div>
+          <p id="keyHint" class="hint"></p>
+        </div>
+      </div>
+
+      <section class="leads" aria-label="Pipeline">
+        <div class="leads-head">
+          <span class="leads-title">Pipeline <span id="leadsCount" class="leads-count">0</span></span>
+          <button type="button" id="leadsRefresh" class="text-btn" aria-label="Refresh leads">Refresh</button>
+        </div>
+        <div id="leadsList" class="leads-list"></div>
+      </section>
+
+      <div class="sidebar-foot">
+        <a id="docsLink" class="text-link" href="/docs" target="_blank" rel="noopener">API docs ↗</a>
+        <button type="button" id="clearBtn" class="ghost-btn">New conversation</button>
+      </div>
+    </aside>
+
+    <!-- ---------------------------------------------------------------- -->
+    <!-- Main: chat                                                        -->
+    <!-- ---------------------------------------------------------------- -->
+    <main class="chat" aria-label="Chat">
+      <div id="banner" class="banner" role="alert" hidden></div>
+
+      <div id="messages" class="messages">
+        <div id="emptyState" class="empty-state">
+          <p class="empty-title">Ask the commercial assistant</p>
+          <p class="empty-hint">It can list leads, add leads &amp; notes, update pipeline status,
+            draft outreach emails, and report pipeline stats — all persisted through the store.</p>
+          <div class="suggestions" id="suggestions">
+            <button type="button" class="chip-btn" data-q="Show me all qualified leads.">Show qualified leads</button>
+            <button type="button" class="chip-btn" data-q="Add a lead: Marie Roy at Novacom, marie.roy@novacom.example.">Add a new lead</button>
+            <button type="button" class="chip-btn" data-q="What do the pipeline stats look like?">Pipeline stats</button>
+          </div>
+        </div>
+      </div>
+
+      <form id="composer" class="composer">
+        <textarea id="input" class="composer-input" rows="1"
+                  placeholder="Message the assistant…  (Enter to send, Shift+Enter for a new line)"
+                  autocomplete="off"></textarea>
+        <button type="submit" id="sendBtn" class="send-btn" disabled>Send</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

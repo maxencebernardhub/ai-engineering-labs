@@ -9,6 +9,18 @@ The labs are written to be read in one sitting, run immediately, and adapted
 for real projects. Every module progresses from the simplest possible request
 to more advanced, production-oriented patterns.
 
+The eight modules form a single arc: **from a first raw API call (lab 01) to an
+AI product deployed on AWS and reachable by anyone (lab 08)** — passing through
+multi-provider abstraction, retrieval, autonomous agents, and local inference.
+
+> **Live demo** — lab 08 runs in the cloud:
+> **[try the app](http://lab08-frontend-maxencebernardhub.s3-website.ca-central-1.amazonaws.com)**
+> · **[browse its API](https://pynmzop7b3cmyjhubxulyozkai0ydmsh.lambda-url.ca-central-1.on.aws/docs)**
+> — bring your own LLM key; none is stored server-side.
+> *This is a demo deployment and may be taken offline. If the links are dead,
+> [`08_fastapi_docker_aws/deploy/`](08_fastapi_docker_aws/deploy/) redeploys the whole stack in
+> minutes.*
+
 ---
 
 ## Repository Overview
@@ -22,8 +34,7 @@ to more advanced, production-oriented patterns.
 | [`05_rag_langchain/`](05_rag_langchain/) | LangChain | Embeddings · Chunking strategies · ChromaDB · Query expansion · CrossEncoder reranking · LCEL chains · RAGAS evaluation | Notebooks + Streamlit app | ✅ Available |
 | [`06_langgraph_deep_agents/`](06_langgraph_deep_agents/) | LangGraph + Deep Agents | Commercial assistant agent · LangGraph `StateGraph` · Human-in-the-loop · Checkpointing · Deep Agents declarative API · HITL comparison · Streamlit multi-agent app · LangSmith tracing | Notebooks + Streamlit app | ✅ Available |
 | [`07_local_models_privacy_first/`](07_local_models_privacy_first/) | Ollama + LiteLLM | Local inference · Structured outputs · Tool calling · Vision · Offline RAG (FAISS) · 6-model benchmark (local vs cloud) · Privacy-first architecture · Streamlit chat app | Notebooks + Streamlit app | ✅ Available |
-| `08_fastapi_backend/` | FastAPI | REST API for AI endpoints · Streaming responses · Auth patterns · Background tasks · OpenAPI schema | Scripts + App | 🔵 Planned |
-| `09_docker_deploy/` | Docker | Containerising AI apps · Multi-stage builds · Compose for local stacks · Environment management · Health checks | Config + Scripts | 🔵 Planned |
+| [`08_fastapi_docker_aws/`](08_fastapi_docker_aws/) | FastAPI + Docker + AWS | **Notebook → production**: lab 06's agent as a stateless REST API · SSE streaming · BYOK keys · Pydantic validation · Rate limiting · CORS · `LeadStore` abstraction (memory / PostgreSQL / S3) · Multi-stage Dockerfile + Compose · AWS Lambda (container image) + Function URL · S3-hosted frontend · Least-privilege IAM · Bash + AWS CLI deploy scripts · **live public URL** | FastAPI service + Frontend + Deploy scripts | ✅ Available |
 
 ---
 
@@ -103,6 +114,18 @@ to more advanced, production-oriented patterns.
 | [`07_local_models_privacy_first/05_local_rag.ipynb`](07_local_models_privacy_first/05_local_rag.ipynb) | Full offline RAG: FAISS + `qwen3-embedding:0.6b` + `mistral:7b` — 5/5 accuracy |
 | [`07_local_models_privacy_first/06_benchmark.ipynb`](07_local_models_privacy_first/06_benchmark.ipynb) | 6-model benchmark via LiteLLM — performance, quality, economics, data sovereignty |
 
+### `08_fastapi_docker_aws/` — FastAPI + Docker + AWS
+
+| Resource | Description |
+| --- | --- |
+| [`08_fastapi_docker_aws/README.md`](08_fastapi_docker_aws/README.md) | Architecture, the notebook→production narrative, local run, live demo links |
+| [`08_fastapi_docker_aws/app/main.py`](08_fastapi_docker_aws/app/main.py) | FastAPI app factory + routes: `/health`, `/models`, `/invoke`, `/invoke/stream` (SSE), `/leads` |
+| [`08_fastapi_docker_aws/app/storage/`](08_fastapi_docker_aws/app/storage/) | `LeadStore` abstraction — the same app on in-memory, PostgreSQL, or S3 |
+| [`08_fastapi_docker_aws/app/security.py`](08_fastapi_docker_aws/app/security.py) | BYOK key resolution, optional bearer auth, per-IP rate limiting, CORS |
+| [`08_fastapi_docker_aws/Dockerfile`](08_fastapi_docker_aws/Dockerfile) | Multi-stage, non-root image bundling the AWS Lambda Web Adapter — one image, local **and** Lambda |
+| [`08_fastapi_docker_aws/deploy/deploy.sh`](08_fastapi_docker_aws/deploy/deploy.sh) | Idempotent staged deploy: ECR → IAM → S3 → Lambda → Function URL → concurrency |
+| [`08_fastapi_docker_aws/deploy/README.md`](08_fastapi_docker_aws/deploy/README.md) | The full AWS guide: account, budgets, IAM, CORS, the gotchas hit in production, teardown |
+
 ---
 
 ## Getting Started
@@ -134,7 +157,7 @@ ANTHROPIC_API_KEY=your_anthropic_api_key_here
 # Google AI (Gemini)
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Google AI (used in lab 06)
+# Google AI
 GOOGLE_API_KEY=your_google_api_key_here
 
 # VoyageAI (used for embeddings in Anthropic labs)
@@ -143,6 +166,10 @@ VOYAGE_API_KEY=your_voyageai_api_key_here
 # LangSmith (used in lab 06 for agent tracing)
 LANGSMITH_API_KEY=your_langsmith_api_key_here
 ```
+
+Lab 08 reads these keys for **local** runs only. Its deployed version carries no
+key at all — callers supply their own (BYOK), so the deployment costs its owner
+nothing in LLM usage.
 
 ---
 

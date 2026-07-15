@@ -1,0 +1,37 @@
+# Keep the Docker build context minimal and reproducible.
+# Only pyproject.toml, uv.lock, app/, frontend/, and data/ are needed at build.
+
+# Python virtual environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Tests and local dev tooling (not shipped in the runtime image)
+tests/
+.python-version
+
+# Docs and specs (not needed at runtime)
+docs/
+README.md
+PROJECT_STATE.md
+
+# Deploy scripts (run from the host, not inside the image)
+deploy/
+
+# Local storage artifacts
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets must never enter the image (BYOK in the cloud; local uses repo-root .env)
+.env
+*.env
+
+# Git and OS / editor noise
+.git/
+.gitignore
+.dockerignore
+.DS_Store
